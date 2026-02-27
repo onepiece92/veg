@@ -1,16 +1,31 @@
-# bakery_flutter
+# La Petite Boulangerie
 
-A new Flutter project.
+A beautiful, functional, and fully-themed Bakery App built with Flutter. Originally translated from a React codebase, this mobile app implements modern Flutter best practices, clean architecture, responsive UI components, and state management using `Provider`.
+
+## Features
+* **Home Screen**: Browse categories, search products, use dietary filters, and toggle between grid and list layouts.
+* **Product Details**: View product info, hero images, customize dietary options, and add to cart.
+* **Cart & Checkout**: Manage cart items, select pickup/delivery addresses, and complete the 3-step checkout flow.
+* **Favorites**: Save and manage your favorite bakes.
+* **Profile Management**: Manage saved addresses, dietary preferences, payment methods, and notification settings.
+
+## Design
+The app features a custom Material Design theme centralized in `lib/theme/`. It relies heavily on standard Material widgets (`Card`, `ChoiceChip`, `FilterChip`, `ListTile`, `IconButton`) natively styled with custom colors, typography (DM Serif Display and DM Sans), and borders to deliver a premium, cohesive aesthetic throughout the screens while eliminating code duplication.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
+* Flutter SDK (latest stable)
+* Dart SDK
 
-A few resources to get you started if this is your first Flutter project:
+### Installation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+3. Run the app:
+   ```bash
+   flutter run
+   ```
