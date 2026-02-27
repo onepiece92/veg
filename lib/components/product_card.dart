@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_decorations.dart';
 import '../models/product.dart';
+import '../providers/cart_provider.dart';
 import 'badge_chip.dart';
 
-/// List-view product card.
-class ProductCard extends StatefulWidget {
+/// List-view product card with live qty counter on the add button.
+class ProductCard extends StatelessWidget {
   final Product product;
   final VoidCallback onTap;
   final VoidCallback onQuickAdd;
@@ -23,31 +25,19 @@ class ProductCard extends StatefulWidget {
   });
 
   @override
-  State<ProductCard> createState() => _ProductCardState();
-}
-
-class _ProductCardState extends State<ProductCard> {
-  bool _added = false;
-
-  void _handleAdd() {
-    if (_added) return;
-    setState(() => _added = true);
-    widget.onQuickAdd();
-    Future.delayed(const Duration(milliseconds: 1200), () {
-      if (mounted) setState(() => _added = false);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final qty = context.select<CartProvider, int>((cart) => cart.items
+        .where((i) => i.product.id == product.id)
+        .fold(0, (sum, i) => sum + i.quantity));
+
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: AppDecorations.card,
         child: Row(
           children: [
-            // Emoji image
+            // Emoji image + badge
             Stack(
               children: [
                 Container(
@@ -55,16 +45,14 @@ class _ProductCardState extends State<ProductCard> {
                   height: 90,
                   decoration: AppDecorations.productImage,
                   alignment: Alignment.center,
-                  child: Text(
-                    widget.product.image,
-                    style: const TextStyle(fontSize: 40),
-                  ),
+                  child:
+                      Text(product.image, style: const TextStyle(fontSize: 40)),
                 ),
-                if (widget.product.badge != null)
+                if (product.badge != null)
                   Positioned(
                     top: 6,
                     left: 6,
-                    child: BadgeChip(badge: widget.product.badge!),
+                    child: BadgeChip(badge: product.badge!),
                   ),
               ],
             ),
@@ -73,82 +61,48 @@ class _ProductCardState extends State<ProductCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Name + favourite
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Text(
-                          widget.product.name,
-                          style: AppTextStyles.headlineSmall.copyWith(
-                            fontSize: 16,
-                          ),
-                        ),
+                        child: Text(product.name,
+                            style: AppTextStyles.headlineSmall
+                                .copyWith(fontSize: 16)),
                       ),
                       GestureDetector(
-                        onTap: widget.onToggleFavourite,
+                        onTap: onToggleFavourite,
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 200),
                           child: Icon(
-                            widget.isFavourite
+                            isFavourite
                                 ? Icons.favorite_rounded
                                 : Icons.favorite_border_rounded,
-                            color: widget.isFavourite
+                            color: isFavourite
                                 ? AppColors.terracotta
                                 : AppColors.beige,
                             size: 20,
-                            key: ValueKey(widget.isFavourite),
+                            key: ValueKey(isFavourite),
                           ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    widget.product.time,
-                    style: AppTextStyles.bodySmall.copyWith(fontSize: 12),
-                  ),
+                  Text(product.time,
+                      style: AppTextStyles.bodySmall.copyWith(fontSize: 12)),
                   const SizedBox(height: 6),
+
+                  // Price + counter button
                   Row(
                     children: [
-                      Text(
-                        '\$${widget.product.price.toStringAsFixed(2)}',
-                        style: AppTextStyles.price,
-                      ),
+                      Text('\$${product.price.toStringAsFixed(2)}',
+                          style: AppTextStyles.price),
                       const Spacer(),
-                      // Add button
-                      GestureDetector(
-                        onTap: _handleAdd,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.elasticOut,
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color:
-                                _added ? AppColors.sage : AppColors.darkBrown,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.darkBrown.withOpacity(0.2),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          alignment: Alignment.center,
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            child: _added
-                                ? const Icon(Icons.check_rounded,
-                                    color: AppColors.white,
-                                    size: 16,
-                                    key: ValueKey('check'))
-                                : const Icon(Icons.add_rounded,
-                                    color: AppColors.cream,
-                                    size: 18,
-                                    key: ValueKey('add')),
-                          ),
-                        ),
+                      _AddCounter(
+                        qty: qty,
+                        productId: product.id,
+                        onAdd: onQuickAdd,
                       ),
                     ],
                   ),
@@ -158,6 +112,87 @@ class _ProductCardState extends State<ProductCard> {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+/// Compact "+" that expands to "−  N  +" once qty > 0.
+class _AddCounter extends StatelessWidget {
+  final int qty;
+  final int productId;
+  final VoidCallback onAdd;
+
+  const _AddCounter({
+    required this.qty,
+    required this.productId,
+    required this.onAdd,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final hasItems = qty > 0;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 280),
+      curve: Curves.easeInOut,
+      height: 32,
+      width: hasItems ? 88 : 32,
+      decoration: BoxDecoration(
+        color: AppColors.darkBrown,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.darkBrown.withValues(alpha: 0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: hasItems
+          ? Row(
+              children: [
+                // − decrement
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => context
+                        .read<CartProvider>()
+                        .updateById(productId, qty - 1),
+                    child: const Icon(Icons.remove_rounded,
+                        color: AppColors.cream, size: 14),
+                  ),
+                ),
+                // Animated count
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  transitionBuilder: (child, anim) =>
+                      ScaleTransition(scale: anim, child: child),
+                  child: Text(
+                    '$qty',
+                    key: ValueKey(qty),
+                    style: AppTextStyles.label.copyWith(
+                      color: AppColors.cream,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                // + increment
+                Expanded(
+                  child: GestureDetector(
+                    onTap: onAdd,
+                    child: const Icon(Icons.add_rounded,
+                        color: AppColors.cream, size: 14),
+                  ),
+                ),
+              ],
+            )
+          : GestureDetector(
+              onTap: onAdd,
+              child: const Icon(Icons.add_rounded,
+                  color: AppColors.cream, size: 18),
+            ),
     );
   }
 }

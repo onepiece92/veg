@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen>
   bool _gridView = false;
   bool _showFilter = false;
   final Set<String> _activeFilters = {};
-  String? _toast;
   final _searchCtrl = TextEditingController();
   late AnimationController _animCtrl;
   late Animation<double> _fadeAnim;
@@ -58,9 +57,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _quickAdd(Product product) {
     context.read<CartProvider>().addProduct(product);
-    setState(() => _toast = product.name);
-    Future.delayed(const Duration(milliseconds: 1800),
-        () => mounted ? setState(() => _toast = null) : null);
   }
 
   void _showAddressSheet() {
@@ -316,12 +312,15 @@ class _HomeScreenState extends State<HomeScreen>
                       physics: const BouncingScrollPhysics(),
                       itemCount: BakeryData.recentOrders.length.clamp(0, 3),
                       separatorBuilder: (_, __) => const SizedBox(width: 12),
-                      itemBuilder: (_, i) => SizedBox(
-                        width: 200,
-                        child: OrderCard(
-                          order: BakeryData.recentOrders[i],
-                          featured: i == 0,
-                          onReorder: () => widget.onOrdersTab(),
+                      itemBuilder: (_, i) => GestureDetector(
+                        onTap: widget.onOrdersTab,
+                        child: SizedBox(
+                          width: 200,
+                          child: OrderCard(
+                            order: BakeryData.recentOrders[i],
+                            featured: i == 0,
+                            onReorder: () => widget.onOrdersTab(),
+                          ),
                         ),
                       ),
                     ),
@@ -381,7 +380,7 @@ class _HomeScreenState extends State<HomeScreen>
                       crossAxisCount: 2,
                       crossAxisSpacing: 12,
                       mainAxisSpacing: 12,
-                      childAspectRatio: 0.75,
+                      childAspectRatio: 0.95,
                     ),
                     itemCount: filtered.length,
                     itemBuilder: (_, i) {
@@ -415,41 +414,6 @@ class _HomeScreenState extends State<HomeScreen>
               ],
             ),
           ),
-
-          // ── Toast ────────────────────────────────────────────────
-          if (_toast != null)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-                decoration: BoxDecoration(
-                  color: AppColors.darkBrown,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: const BoxDecoration(
-                        color: AppColors.sage,
-                        shape: BoxShape.circle,
-                      ),
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.check_rounded,
-                          color: AppColors.white, size: 14),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      '$_toast added to cart',
-                      style: AppTextStyles.bodyMedium
-                          .copyWith(color: AppColors.cream),
-                    ),
-                  ],
-                ),
-              ),
-            ),
         ],
       ),
     );

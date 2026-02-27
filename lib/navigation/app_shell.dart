@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../models/product.dart';
+import '../data/bakery_data.dart';
 import '../providers/cart_provider.dart';
 import '../components/bottom_nav_bar.dart';
 import '../screens/home/home_screen.dart';
@@ -134,7 +135,21 @@ class _AppShellState extends State<AppShell> {
           onTrackOrder: () => _navigate(_AppRoute.recentOrders),
         );
       case _AppRoute.recentOrders:
-        return RecentOrdersScreen(onBack: () => _navigate(_AppRoute.home));
+        return RecentOrdersScreen(
+          onBack: () => _navigate(_AppRoute.home),
+          onReorder: (order) {
+            final cart = context.read<CartProvider>();
+            for (final item in order.items) {
+              final product = BakeryData.products
+                  .where((p) => p.name == item.name)
+                  .firstOrNull;
+              if (product != null) {
+                cart.addProduct(product, quantity: item.qty);
+              }
+            }
+            _navigate(_AppRoute.cart);
+          },
+        );
       case _AppRoute.favourites:
         return FavouritesScreen(onProductTap: _onProductTap);
       case _AppRoute.profile:

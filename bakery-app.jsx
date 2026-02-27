@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 const COLORS = {
-  cream: "#FFF8F0",
+  crea : "#FFF8F0",
   beige: "#F5E6D3",
   warmWhite: "#FFFCF7",
   softBrown: "#8B7355",
