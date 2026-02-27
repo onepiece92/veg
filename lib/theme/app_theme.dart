@@ -86,5 +86,69 @@ final class AppTheme {
           thickness: 1,
           space: 0,
         ),
+        cardTheme: const CardThemeData(
+          color: AppColors.white,
+          elevation: 0,
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            side: BorderSide(color: AppColors.beige),
+          ),
+        ),
+        chipTheme: ChipThemeData(
+          backgroundColor: AppColors.golden,
+          labelStyle: AppTextStyles.labelSmall.copyWith(color: AppColors.white),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide.none,
+          ),
+        ),
+        extensions: const <ThemeExtension<dynamic>>[
+          AppThemeExtension(
+            productImageGradient: AppColors.productImageGradient,
+            primaryGradient: AppColors.primaryGradient,
+            heroGradient: AppColors.heroGradient,
+          ),
+        ],
       );
+}
+
+/// Custom theme extension for properties not supported by default ThemeData.
+class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
+  final Gradient productImageGradient;
+  final Gradient primaryGradient;
+  final Gradient heroGradient;
+
+  const AppThemeExtension({
+    required this.productImageGradient,
+    required this.primaryGradient,
+    required this.heroGradient,
+  });
+
+  @override
+  ThemeExtension<AppThemeExtension> copyWith({
+    Gradient? productImageGradient,
+    Gradient? primaryGradient,
+    Gradient? heroGradient,
+  }) {
+    return AppThemeExtension(
+      productImageGradient: productImageGradient ?? this.productImageGradient,
+      primaryGradient: primaryGradient ?? this.primaryGradient,
+      heroGradient: heroGradient ?? this.heroGradient,
+    );
+  }
+
+  @override
+  ThemeExtension<AppThemeExtension> lerp(
+      covariant ThemeExtension<AppThemeExtension>? other, double t) {
+    if (other is! AppThemeExtension) return this;
+    return AppThemeExtension(
+      productImageGradient:
+          Gradient.lerp(productImageGradient, other.productImageGradient, t)!,
+      primaryGradient:
+          Gradient.lerp(primaryGradient, other.primaryGradient, t)!,
+      heroGradient: Gradient.lerp(heroGradient, other.heroGradient, t)!,
+    );
+  }
 }

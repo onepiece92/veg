@@ -141,16 +141,14 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 const SizedBox(width: 12),
                 // Notification bell
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: const BoxDecoration(
-                    color: AppColors.beige,
-                    shape: BoxShape.circle,
+                IconButton(
+                  onPressed: () {},
+                  style: IconButton.styleFrom(
+                    backgroundColor: AppColors.beige,
+                    foregroundColor: AppColors.softBrown,
+                    minimumSize: const Size(44, 44),
                   ),
-                  alignment: Alignment.center,
-                  child: const Icon(Icons.notifications_outlined,
-                      color: AppColors.softBrown, size: 22),
+                  icon: const Icon(Icons.notifications_outlined, size: 22),
                 ),
               ],
             ),
@@ -158,7 +156,9 @@ class _HomeScreenState extends State<HomeScreen>
           const SizedBox(height: 14),
 
           // ── Search + Filter ──────────────────────────────────────
-          Padding(
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            margin: EdgeInsets.only(bottom: _showFilter ? 12 : 20),
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
               children: [
@@ -201,39 +201,30 @@ class _HomeScreenState extends State<HomeScreen>
                           children: BakeryData.dietaryFilterOptions.map((f) {
                             final active = _activeFilters.contains(f);
                             final label = f.replaceAll(' Option', '');
-                            return GestureDetector(
-                              onTap: () => setState(() {
-                                if (active) {
-                                  _activeFilters.remove(f);
-                                } else {
+                            return FilterChip(
+                              label: Text(label),
+                              selected: active,
+                              onSelected: (selected) => setState(() {
+                                if (selected) {
                                   _activeFilters.add(f);
+                                } else {
+                                  _activeFilters.remove(f);
                                 }
                               }),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: active
-                                      ? AppColors.darkBrown
-                                      : AppColors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: active
-                                        ? AppColors.darkBrown
-                                        : AppColors.beige,
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: Text(
-                                  '${active ? '✓ ' : ''}$label',
-                                  style: AppTextStyles.label.copyWith(
-                                    color: active
-                                        ? AppColors.cream
-                                        : AppColors.softBrown,
-                                    fontSize: 12,
-                                  ),
-                                ),
+                              selectedColor: AppColors.darkBrown,
+                              checkmarkColor: AppColors.cream,
+                              backgroundColor: AppColors.white,
+                              side: BorderSide(
+                                color: active
+                                    ? AppColors.darkBrown
+                                    : AppColors.beige,
+                                width: 1.5,
+                              ),
+                              labelStyle: AppTextStyles.label.copyWith(
+                                color: active
+                                    ? AppColors.cream
+                                    : AppColors.softBrown,
+                                fontSize: 12,
                               ),
                             );
                           }).toList(),
@@ -438,7 +429,22 @@ class _SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<_SearchBar> {
+  final FocusNode _focusNode = FocusNode();
   bool _focused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() => _focused = _focusNode.hasFocus);
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -459,23 +465,28 @@ class _SearchBarState extends State<_SearchBar> {
       child: Row(
         children: [
           const Icon(Icons.search_rounded,
-              color: AppColors.softBrown, size: 20),
+              color: AppColors.softBrown, size: 20, weight: 600),
           const SizedBox(width: 10),
           Expanded(
-            child: Focus(
-              onFocusChange: (f) => setState(() => _focused = f),
-              child: TextField(
-                controller: widget.controller,
-                onChanged: widget.onChanged,
-                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text),
-                decoration: InputDecoration(
-                  hintText: 'Search breads, pastries...',
-                  hintStyle: AppTextStyles.bodyMedium
-                      .copyWith(color: AppColors.textLight),
-                  border: InputBorder.none,
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
+            child: TextField(
+              focusNode: _focusNode,
+              controller: widget.controller,
+              onChanged: widget.onChanged,
+              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text),
+              decoration: InputDecoration(
+                hintText: 'Search breads, pastries...',
+                hintStyle: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.textLight.withValues(alpha: 0.8),
                 ),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                filled: true,
+                fillColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
               ),
             ),
           ),
@@ -486,7 +497,7 @@ class _SearchBarState extends State<_SearchBar> {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                  color: AppColors.softBrown.withOpacity(0.13),
+                  color: AppColors.softBrown.withValues(alpha: 0.13),
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,
@@ -513,48 +524,24 @@ class _FilterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        width: 48,
-        height: 48,
-        decoration: BoxDecoration(
-          color: active ? AppColors.darkBrown : AppColors.beige,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: active
-              ? [
-                  BoxShadow(
-                    color: AppColors.darkBrown.withOpacity(0.2),
-                    blurRadius: 15,
-                  )
-                ]
-              : [],
+    return Badge(
+      isLabelVisible: badge > 0,
+      label: Text('$badge',
+          style: AppTextStyles.caption
+              .copyWith(color: AppColors.white, fontSize: 9)),
+      backgroundColor: AppColors.terracotta,
+      offset: const Offset(-4, 4),
+      child: IconButton(
+        onPressed: onTap,
+        style: IconButton.styleFrom(
+          backgroundColor: active ? AppColors.darkBrown : AppColors.beige,
+          foregroundColor: active ? AppColors.cream : AppColors.softBrown,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          minimumSize: const Size(48, 48),
+          padding: EdgeInsets.zero,
         ),
-        alignment: Alignment.center,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Icon(Icons.tune_rounded,
-                color: active ? AppColors.cream : AppColors.softBrown,
-                size: 20),
-            if (badge > 0)
-              Positioned(
-                top: -6,
-                right: -6,
-                child: Container(
-                  width: 16,
-                  height: 16,
-                  decoration: const BoxDecoration(
-                      color: AppColors.terracotta, shape: BoxShape.circle),
-                  alignment: Alignment.center,
-                  child: Text('$badge',
-                      style: AppTextStyles.caption
-                          .copyWith(color: AppColors.white, fontSize: 9)),
-                ),
-              ),
-          ],
-        ),
+        icon: const Icon(Icons.tune_rounded, size: 20),
       ),
     );
   }
@@ -577,8 +564,8 @@ class _SortButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isActive = sortBy != 'default';
-    return GestureDetector(
-      onTap: () {
+    return TextButton.icon(
+      onPressed: () {
         showModalBottomSheet(
           context: context,
           backgroundColor: AppColors.white,
@@ -621,34 +608,22 @@ class _SortButton extends StatelessWidget {
           ),
         );
       },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
+      style: TextButton.styleFrom(
+        backgroundColor: isActive ? AppColors.darkBrown : AppColors.beige,
+        foregroundColor: isActive ? AppColors.cream : AppColors.softBrown,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-        decoration: BoxDecoration(
-          color: isActive ? AppColors.darkBrown : AppColors.beige,
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Row(
-          children: [
-            Icon(Icons.sort_rounded,
-                color: isActive ? AppColors.cream : AppColors.softBrown,
-                size: 14),
-            const SizedBox(width: 5),
-            Text(
-              isActive
-                  ? _options
-                      .firstWhere((o) => o.$1 == sortBy)
-                      .$2
-                      .split(':')
-                      .first
-                  : 'Sort',
-              style: AppTextStyles.label.copyWith(
-                color: isActive ? AppColors.cream : AppColors.softBrown,
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
+      ),
+      icon: const Icon(Icons.sort_rounded, size: 14),
+      label: Text(
+        isActive
+            ? _options.firstWhere((o) => o.$1 == sortBy).$2.split(':').first
+            : 'Sort',
+        style: AppTextStyles.label.copyWith(fontSize: 12),
       ),
     );
   }
@@ -690,20 +665,16 @@ class _ToggleBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        width: 34,
-        height: 34,
-        decoration: BoxDecoration(
-          color: active ? AppColors.darkBrown : AppColors.beige,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        alignment: Alignment.center,
-        child: Icon(icon,
-            color: active ? AppColors.cream : AppColors.softBrown, size: 16),
+    return IconButton(
+      onPressed: onTap,
+      style: IconButton.styleFrom(
+        backgroundColor: active ? AppColors.darkBrown : AppColors.beige,
+        foregroundColor: active ? AppColors.cream : AppColors.softBrown,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        minimumSize: const Size(34, 34),
+        padding: EdgeInsets.zero,
       ),
+      icon: Icon(icon, size: 16),
     );
   }
 }
@@ -726,18 +697,9 @@ class _EmptyState extends StatelessWidget {
           Text('Try adjusting your search or filters',
               style: AppTextStyles.bodySmall, textAlign: TextAlign.center),
           const SizedBox(height: 16),
-          GestureDetector(
-            onTap: onClear,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.darkBrown, width: 1.5),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text('Clear all',
-                  style: AppTextStyles.bodyMedium
-                      .copyWith(color: AppColors.darkBrown)),
-            ),
+          OutlinedButton(
+            onPressed: onClear,
+            child: const Text('Clear all'),
           ),
         ],
       ),

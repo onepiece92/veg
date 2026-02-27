@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
-import '../theme/app_decorations.dart';
+import '../theme/app_theme.dart';
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
 import 'badge_chip.dart';
@@ -30,10 +30,11 @@ class GridProductCard extends StatelessWidget {
         .where((i) => i.product.id == product.id)
         .fold(0, (sum, i) => sum + i.quantity));
 
+    final themeExt = Theme.of(context).extension<AppThemeExtension>()!;
+
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: AppDecorations.card,
+      child: Card(
         clipBehavior: Clip.hardEdge,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,12 +45,11 @@ class GridProductCard extends StatelessWidget {
                 Container(
                   height: 120,
                   width: double.infinity,
-                  decoration: const BoxDecoration(
-                    gradient: AppColors.productImageGradient,
-                  ),
+                  decoration:
+                      BoxDecoration(gradient: themeExt.productImageGradient),
                   alignment: Alignment.center,
                   child:
-                      Text(product.image, style: const TextStyle(fontSize: 50)),
+                      Text(product.image, style: const TextStyle(fontSize: 52)),
                 ),
                 if (product.badge != null)
                   Positioned(

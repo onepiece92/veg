@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
 
 /// Badge chip for product cards (Bestseller, New, Popular).
 class BadgeChip extends StatelessWidget {
@@ -21,20 +20,12 @@ class BadgeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: _color,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        badge.toUpperCase(),
-        style: AppTextStyles.caption.copyWith(
-          color: AppColors.white,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.5,
-        ),
-      ),
+    return Chip(
+      backgroundColor: _color,
+      label: Text(badge.toUpperCase()),
+      // Visual density reduces the default hardcoded Chip heights to match the legacy container look
+      visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }

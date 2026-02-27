@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
-import '../theme/app_decorations.dart';
+import '../theme/app_theme.dart';
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
 import 'badge_chip.dart';
@@ -30,86 +30,93 @@ class ProductCard extends StatelessWidget {
         .where((i) => i.product.id == product.id)
         .fold(0, (sum, i) => sum + i.quantity));
 
+    final themeExt = Theme.of(context).extension<AppThemeExtension>()!;
+
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: AppDecorations.card,
-        child: Row(
-          children: [
-            // Emoji image + badge
-            Stack(
-              children: [
-                Container(
-                  width: 90,
-                  height: 90,
-                  decoration: AppDecorations.productImage,
-                  alignment: Alignment.center,
-                  child:
-                      Text(product.image, style: const TextStyle(fontSize: 40)),
-                ),
-                if (product.badge != null)
-                  Positioned(
-                    top: 6,
-                    left: 6,
-                    child: BadgeChip(badge: product.badge!),
-                  ),
-              ],
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      child: Card(
+        clipBehavior: Clip.hardEdge,
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              // Emoji image + badge
+              Stack(
                 children: [
-                  // Name + favourite
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Text(product.name,
-                            style: AppTextStyles.headlineSmall
-                                .copyWith(fontSize: 16)),
-                      ),
-                      GestureDetector(
-                        onTap: onToggleFavourite,
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: Icon(
-                            isFavourite
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_border_rounded,
-                            color: isFavourite
-                                ? AppColors.terracotta
-                                : AppColors.beige,
-                            size: 20,
-                            key: ValueKey(isFavourite),
-                          ),
-                        ),
-                      ),
-                    ],
+                  Container(
+                    width: 90,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      gradient: themeExt.productImageGradient,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(product.image,
+                        style: const TextStyle(fontSize: 40)),
                   ),
-                  const SizedBox(height: 4),
-                  Text(product.time,
-                      style: AppTextStyles.bodySmall.copyWith(fontSize: 12)),
-                  const SizedBox(height: 6),
-
-                  // Price + counter button
-                  Row(
-                    children: [
-                      Text('\$${product.price.toStringAsFixed(2)}',
-                          style: AppTextStyles.price),
-                      const Spacer(),
-                      _AddCounter(
-                        qty: qty,
-                        productId: product.id,
-                        onAdd: onQuickAdd,
-                      ),
-                    ],
-                  ),
+                  if (product.badge != null)
+                    Positioned(
+                      top: 6,
+                      left: 6,
+                      child: BadgeChip(badge: product.badge!),
+                    ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Name + favourite
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(product.name,
+                              style: AppTextStyles.headlineSmall
+                                  .copyWith(fontSize: 16)),
+                        ),
+                        GestureDetector(
+                          onTap: onToggleFavourite,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: Icon(
+                              isFavourite
+                                  ? Icons.favorite_rounded
+                                  : Icons.favorite_border_rounded,
+                              color: isFavourite
+                                  ? AppColors.terracotta
+                                  : AppColors.beige,
+                              size: 20,
+                              key: ValueKey(isFavourite),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(product.time,
+                        style: AppTextStyles.bodySmall.copyWith(fontSize: 12)),
+                    const SizedBox(height: 6),
+
+                    // Price + counter button
+                    Row(
+                      children: [
+                        Text('\$${product.price.toStringAsFixed(2)}',
+                            style: AppTextStyles.price),
+                        const Spacer(),
+                        _AddCounter(
+                          qty: qty,
+                          productId: product.id,
+                          onAdd: onQuickAdd,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

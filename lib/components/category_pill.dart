@@ -19,47 +19,37 @@ class CategoryPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeOut,
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-        decoration: BoxDecoration(
-          color: active ? AppColors.darkBrown : AppColors.white,
-          borderRadius: BorderRadius.circular(50),
-          boxShadow: active
-              ? [
-                  BoxShadow(
-                    color: AppColors.darkBrown.withOpacity(0.2),
-                    blurRadius: 15,
-                    offset: const Offset(0, 4),
-                  )
-                ]
-              : [
-                  BoxShadow(
-                    color: AppColors.shadow,
-                    blurRadius: 4,
-                    offset: const Offset(0, 1),
-                  )
-                ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(icon, style: const TextStyle(fontSize: 15)),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: AppTextStyles.label.copyWith(
-                color: active ? AppColors.cream : AppColors.softBrown,
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-              ),
+    return FilterChip(
+      selected: active,
+      onSelected: (_) => onTap(),
+      label: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(icon, style: const TextStyle(fontSize: 15)),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: AppTextStyles.label.copyWith(
+              color: active ? AppColors.cream : AppColors.softBrown,
+              fontWeight: FontWeight.w500,
+              fontSize: 13,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+      backgroundColor: AppColors.white,
+      selectedColor: AppColors.darkBrown,
+      checkmarkColor: AppColors.cream,
+      showCheckmark: false,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50),
+      ),
+      elevation: active ? 10 : 1,
+      pressElevation: 0,
+      side: BorderSide.none,
+      shadowColor: AppColors.shadow,
+      selectedShadowColor: AppColors.darkBrown.withValues(alpha: 0.4),
     );
   }
 }
