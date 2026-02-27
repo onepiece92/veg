@@ -261,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen>
 
           // ── Category Pills ───────────────────────────────────────
           SizedBox(
-            height: 44,
+            height: 64,
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 24),

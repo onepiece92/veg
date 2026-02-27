@@ -5,7 +5,6 @@ import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
-import 'badge_chip.dart';
 
 /// Grid-view product card with live qty counter on the add button.
 class GridProductCard extends StatelessWidget {
@@ -51,12 +50,7 @@ class GridProductCard extends StatelessWidget {
                   child:
                       Text(product.image, style: const TextStyle(fontSize: 52)),
                 ),
-                if (product.badge != null)
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: BadgeChip(badge: product.badge!),
-                  ),
+
                 // Favourite button
                 Positioned(
                   top: 8,

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
 
 /// Category filter pill chip.
 class CategoryPill extends StatelessWidget {
@@ -19,37 +17,64 @@ class CategoryPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilterChip(
-      selected: active,
-      onSelected: (_) => onTap(),
-      label: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(icon, style: const TextStyle(fontSize: 15)),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: AppTextStyles.label.copyWith(
-              color: active ? AppColors.cream : AppColors.softBrown,
-              fontWeight: FontWeight.w500,
-              fontSize: 13,
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedScale(
+        scale: active ? 1.05 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          decoration: BoxDecoration(
+            color: active ? colorScheme.primary : theme.cardColor,
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(
+              color: active ? colorScheme.primary : theme.dividerColor,
+              width: 1.5,
             ),
+            boxShadow: [
+              if (active)
+                BoxShadow(
+                  color: colorScheme.primary.withValues(alpha: 0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                )
+              else
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+            ],
           ),
-        ],
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                icon,
+                style: const TextStyle(
+                  fontSize: 16,
+                  height: 1.2,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: active ? colorScheme.onPrimary : colorScheme.onSurface,
+                  fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                  fontSize: 14,
+                  letterSpacing: 0.1,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-      backgroundColor: AppColors.white,
-      selectedColor: AppColors.darkBrown,
-      checkmarkColor: AppColors.cream,
-      showCheckmark: false,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
-      ),
-      elevation: active ? 10 : 1,
-      pressElevation: 0,
-      side: BorderSide.none,
-      shadowColor: AppColors.shadow,
-      selectedShadowColor: AppColors.darkBrown.withValues(alpha: 0.4),
     );
   }
 }

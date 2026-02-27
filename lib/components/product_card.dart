@@ -5,7 +5,6 @@ import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
-import 'badge_chip.dart';
 
 /// List-view product card with live qty counter on the add button.
 class ProductCard extends StatelessWidget {
@@ -54,12 +53,6 @@ class ProductCard extends StatelessWidget {
                     child: Text(product.image,
                         style: const TextStyle(fontSize: 40)),
                   ),
-                  if (product.badge != null)
-                    Positioned(
-                      top: 6,
-                      left: 6,
-                      child: BadgeChip(badge: product.badge!),
-                    ),
                 ],
               ),
               const SizedBox(width: 16),
