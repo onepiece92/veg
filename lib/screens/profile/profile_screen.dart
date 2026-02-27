@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
 import '../../components/loyalty_card.dart';
+import '../../theme/app_theme.dart';
 
 class ProfileScreen extends StatelessWidget {
   final VoidCallback onEditProfile;
@@ -29,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
         children: [
-          Text('My Profile', style: AppTextStyles.displayMedium),
+          Text('My Profile', style: Theme.of(context).textTheme.displayMedium),
           const SizedBox(height: 20),
 
           // Profile card
@@ -44,7 +43,11 @@ class ProfileScreen extends StatelessWidget {
                   colors: [Color(0xFFFFFAF3), Color(0x66F5E6D3)],
                 ),
                 borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: AppColors.lightGold),
+                border: Border.all(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .tertiary
+                        .withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
@@ -52,14 +55,19 @@ class ProfileScreen extends StatelessWidget {
                     width: 68,
                     height: 68,
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                          colors: [AppColors.golden, AppColors.caramel]),
+                      gradient: Theme.of(context)
+                          .extension<AppThemeExtension>()
+                          ?.primaryGradient,
                       borderRadius: BorderRadius.circular(22),
                     ),
                     alignment: Alignment.center,
                     child: Text('S',
-                        style: AppTextStyles.displayLarge
-                            .copyWith(color: AppColors.white, fontSize: 28)),
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayLarge
+                            ?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontSize: 28)),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -67,27 +75,39 @@ class ProfileScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Sophie Martin',
-                            style: AppTextStyles.headlineLarge),
+                            style: Theme.of(context).textTheme.headlineLarge),
                         Text('sophie.martin@email.com',
-                            style:
-                                AppTextStyles.bodySmall.copyWith(fontSize: 13)),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(fontSize: 13)),
                         const SizedBox(height: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppColors.golden.withOpacity(0.12),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .tertiary
+                                .withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text('🥐 Croissant Member',
-                              style: AppTextStyles.label.copyWith(
-                                  color: AppColors.caramel, fontSize: 11)),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary,
+                                      fontSize: 11)),
                         ),
                       ],
                     ),
                   ),
-                  const Icon(Icons.chevron_right_rounded,
-                      color: AppColors.textLight, size: 22),
+                  Icon(Icons.chevron_right_rounded,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      size: 22),
                 ],
               ),
             ),
@@ -145,7 +165,10 @@ class ProfileScreen extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.terracotta.withOpacity(0.07),
+                color: Theme.of(context)
+                    .colorScheme
+                    .errorContainer
+                    .withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(18),
               ),
               child: Row(
@@ -154,7 +177,7 @@ class ProfileScreen extends StatelessWidget {
                     width: 42,
                     height: 42,
                     decoration: BoxDecoration(
-                      color: AppColors.terracotta.withOpacity(0.1),
+                      color: Theme.of(context).colorScheme.errorContainer,
                       borderRadius: BorderRadius.circular(14),
                     ),
                     alignment: Alignment.center,
@@ -162,8 +185,8 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 14),
                   Text('Sign Out',
-                      style: AppTextStyles.bodyLarge
-                          .copyWith(color: AppColors.terracotta)),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.error)),
                 ],
               ),
             ),
@@ -182,8 +205,10 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(label,
-        style:
-            AppTextStyles.labelSmall.copyWith(letterSpacing: 1, fontSize: 11));
+        style: Theme.of(context)
+            .textTheme
+            .labelSmall
+            ?.copyWith(letterSpacing: 1, fontSize: 11));
   }
 }
 
@@ -209,7 +234,7 @@ class _MenuTile extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: AppColors.beige,
+                color: Theme.of(context).dividerColor,
                 borderRadius: BorderRadius.circular(14),
               ),
               alignment: Alignment.center,
@@ -220,15 +245,19 @@ class _MenuTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: AppTextStyles.bodyLarge),
+                  Text(label, style: Theme.of(context).textTheme.bodyLarge),
                   if (sub != null)
                     Text(sub!,
-                        style: AppTextStyles.bodySmall.copyWith(fontSize: 12)),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(fontSize: 12)),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded,
-                color: AppColors.textLight, size: 20),
+            Icon(Icons.chevron_right_rounded,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                size: 20),
           ],
         ),
       ),

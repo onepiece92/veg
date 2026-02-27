@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
 import '../../models/product.dart';
 import '../../data/bakery_data.dart';
 import '../../providers/cart_provider.dart';
@@ -144,8 +142,9 @@ class _HomeScreenState extends State<HomeScreen>
                 IconButton(
                   onPressed: () {},
                   style: IconButton.styleFrom(
-                    backgroundColor: AppColors.beige,
-                    foregroundColor: AppColors.softBrown,
+                    backgroundColor: Theme.of(context).dividerColor,
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onSurfaceVariant,
                     minimumSize: const Size(44, 44),
                   ),
                   icon: const Icon(Icons.notifications_outlined, size: 22),
@@ -193,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('DIETARY FILTERS',
-                            style: AppTextStyles.labelSmall),
+                            style: Theme.of(context).textTheme.labelSmall),
                         const SizedBox(height: 8),
                         Wrap(
                           spacing: 8,
@@ -211,21 +210,31 @@ class _HomeScreenState extends State<HomeScreen>
                                   _activeFilters.remove(f);
                                 }
                               }),
-                              selectedColor: AppColors.darkBrown,
-                              checkmarkColor: AppColors.cream,
-                              backgroundColor: AppColors.white,
+                              selectedColor:
+                                  Theme.of(context).colorScheme.primary,
+                              checkmarkColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              backgroundColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
                               side: BorderSide(
                                 color: active
-                                    ? AppColors.darkBrown
-                                    : AppColors.beige,
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).dividerColor,
                                 width: 1.5,
                               ),
-                              labelStyle: AppTextStyles.label.copyWith(
-                                color: active
-                                    ? AppColors.cream
-                                    : AppColors.softBrown,
-                                fontSize: 12,
-                              ),
+                              labelStyle: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium
+                                  ?.copyWith(
+                                    color: active
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                    fontSize: 12,
+                                  ),
                             );
                           }).toList(),
                         ),
@@ -234,8 +243,14 @@ class _HomeScreenState extends State<HomeScreen>
                             onPressed: () =>
                                 setState(() => _activeFilters.clear()),
                             child: Text('Clear all filters',
-                                style: AppTextStyles.label.copyWith(
-                                    color: AppColors.terracotta, fontSize: 12)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiary,
+                                        fontSize: 12)),
                           ),
                       ],
                     ),
@@ -284,14 +299,19 @@ class _HomeScreenState extends State<HomeScreen>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Recent Orders', style: AppTextStyles.headlineSmall),
+                      Text('Recent Orders',
+                          style: Theme.of(context).textTheme.headlineSmall),
                       GestureDetector(
                         onTap: widget.onOrdersTab,
                         child: Text('View all →',
-                            style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.caramel,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13)),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.tertiary,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13)),
                       ),
                     ],
                   ),
@@ -325,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen>
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Text(
                       '${filtered.length} result${filtered.length != 1 ? 's' : ''}',
-                      style: AppTextStyles.bodySmall,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
 
@@ -333,7 +353,8 @@ class _HomeScreenState extends State<HomeScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Fresh Today', style: AppTextStyles.headlineMedium),
+                    Text('Fresh Today',
+                        style: Theme.of(context).textTheme.headlineMedium),
                     Row(
                       children: [
                         _SortButton(
@@ -413,7 +434,7 @@ class _HomeScreenState extends State<HomeScreen>
 
 // ── Private helper widgets ────────────────────────────────────────────────────
 
-class _SearchBar extends StatefulWidget {
+class _SearchBar extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
   final VoidCallback onClear;
@@ -425,87 +446,26 @@ class _SearchBar extends StatefulWidget {
   });
 
   @override
-  State<_SearchBar> createState() => _SearchBarState();
-}
-
-class _SearchBarState extends State<_SearchBar> {
-  final FocusNode _focusNode = FocusNode();
-  bool _focused = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode.addListener(() {
-      setState(() => _focused = _focusNode.hasFocus);
-    });
-  }
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: _focused ? AppColors.white : AppColors.beige,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: _focused ? AppColors.golden : Colors.transparent,
-          width: 1.5,
-        ),
-        boxShadow: _focused
-            ? [BoxShadow(color: AppColors.shadow, blurRadius: 20)]
-            : [],
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.search_rounded,
-              color: AppColors.softBrown, size: 20, weight: 600),
-          const SizedBox(width: 10),
-          Expanded(
-            child: TextField(
-              focusNode: _focusNode,
-              controller: widget.controller,
-              onChanged: widget.onChanged,
-              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.text),
-              decoration: InputDecoration(
-                hintText: 'Search breads, pastries...',
-                hintStyle: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textLight.withValues(alpha: 0.8),
-                ),
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                filled: true,
-                fillColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                isDense: true,
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-          ),
-          if (widget.controller.text.isNotEmpty)
-            GestureDetector(
-              onTap: widget.onClear,
-              child: Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  color: AppColors.softBrown.withValues(alpha: 0.13),
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: const Icon(Icons.close_rounded,
-                    color: AppColors.softBrown, size: 12),
-              ),
-            ),
-        ],
+    return TextField(
+      controller: controller,
+      onChanged: onChanged,
+      style: Theme.of(context)
+          .textTheme
+          .bodyMedium
+          ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+      decoration: InputDecoration(
+        hintText: 'Search breads, pastries...',
+        prefixIcon: Icon(Icons.search_rounded,
+            color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20),
+        suffixIcon: controller.text.isNotEmpty
+            ? IconButton(
+                onPressed: onClear,
+                icon: Icon(Icons.close_rounded,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: 16),
+              )
+            : null,
       ),
     );
   }
@@ -527,20 +487,13 @@ class _FilterButton extends StatelessWidget {
     return Badge(
       isLabelVisible: badge > 0,
       label: Text('$badge',
-          style: AppTextStyles.caption
-              .copyWith(color: AppColors.white, fontSize: 9)),
-      backgroundColor: AppColors.terracotta,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onTertiary, fontSize: 9)),
+      backgroundColor: Theme.of(context).colorScheme.tertiary,
       offset: const Offset(-4, 4),
       child: IconButton(
+        isSelected: active,
         onPressed: onTap,
-        style: IconButton.styleFrom(
-          backgroundColor: active ? AppColors.darkBrown : AppColors.beige,
-          foregroundColor: active ? AppColors.cream : AppColors.softBrown,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          minimumSize: const Size(48, 48),
-          padding: EdgeInsets.zero,
-        ),
         icon: const Icon(Icons.tune_rounded, size: 20),
       ),
     );
@@ -568,10 +521,6 @@ class _SortButton extends StatelessWidget {
       onPressed: () {
         showModalBottomSheet(
           context: context,
-          backgroundColor: AppColors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
           builder: (_) => Padding(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
             child: Column(
@@ -583,13 +532,14 @@ class _SortButton extends StatelessWidget {
                     width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: AppColors.beige,
+                      color: Theme.of(context).dividerColor,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text('Sort by', style: AppTextStyles.headlineSmall),
+                Text('Sort by',
+                    style: Theme.of(context).textTheme.headlineSmall),
                 const SizedBox(height: 12),
                 ..._options.map((opt) => ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -597,10 +547,13 @@ class _SortButton extends StatelessWidget {
                         onChanged(opt.$1);
                         Navigator.pop(context);
                       },
-                      title: Text(opt.$2, style: AppTextStyles.bodyLarge),
+                      title: Text(opt.$2,
+                          style: Theme.of(context).textTheme.bodyLarge),
                       trailing: sortBy == opt.$1
-                          ? const Icon(Icons.check_rounded,
-                              color: AppColors.sage)
+                          ? Icon(Icons.check_rounded,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer)
                           : null,
                     )),
               ],
@@ -608,22 +561,14 @@ class _SortButton extends StatelessWidget {
           ),
         );
       },
-      style: TextButton.styleFrom(
-        backgroundColor: isActive ? AppColors.darkBrown : AppColors.beige,
-        foregroundColor: isActive ? AppColors.cream : AppColors.softBrown,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-        minimumSize: Size.zero,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
+      statesController:
+          WidgetStatesController({if (isActive) WidgetState.selected}),
       icon: const Icon(Icons.sort_rounded, size: 14),
       label: Text(
         isActive
             ? _options.firstWhere((o) => o.$1 == sortBy).$2.split(':').first
             : 'Sort',
-        style: AppTextStyles.label.copyWith(fontSize: 12),
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(fontSize: 12),
       ),
     );
   }
@@ -637,44 +582,14 @@ class _ViewToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _ToggleBtn(
-          icon: Icons.view_list_rounded,
-          active: !isGrid,
-          onTap: () => onToggle(false),
-        ),
-        const SizedBox(width: 4),
-        _ToggleBtn(
-          icon: Icons.grid_view_rounded,
-          active: isGrid,
-          onTap: () => onToggle(true),
-        ),
+    return SegmentedButton<bool>(
+      showSelectedIcon: false,
+      segments: const [
+        ButtonSegment(value: false, icon: Icon(Icons.view_list_rounded)),
+        ButtonSegment(value: true, icon: Icon(Icons.grid_view_rounded)),
       ],
-    );
-  }
-}
-
-class _ToggleBtn extends StatelessWidget {
-  final IconData icon;
-  final bool active;
-  final VoidCallback onTap;
-
-  const _ToggleBtn(
-      {required this.icon, required this.active, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: onTap,
-      style: IconButton.styleFrom(
-        backgroundColor: active ? AppColors.darkBrown : AppColors.beige,
-        foregroundColor: active ? AppColors.cream : AppColors.softBrown,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        minimumSize: const Size(34, 34),
-        padding: EdgeInsets.zero,
-      ),
-      icon: Icon(icon, size: 16),
+      selected: {isGrid},
+      onSelectionChanged: (set) => onToggle(set.first),
     );
   }
 }
@@ -692,10 +607,12 @@ class _EmptyState extends StatelessWidget {
         children: [
           const Text('🔍', style: TextStyle(fontSize: 48)),
           const SizedBox(height: 14),
-          Text('No items found', style: AppTextStyles.headlineSmall),
+          Text('No items found',
+              style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 6),
           Text('Try adjusting your search or filters',
-              style: AppTextStyles.bodySmall, textAlign: TextAlign.center),
+              style: Theme.of(context).textTheme.bodySmall,
+              textAlign: TextAlign.center),
           const SizedBox(height: 16),
           OutlinedButton(
             onPressed: onClear,

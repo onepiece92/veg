@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
-import '../../theme/app_decorations.dart';
+import '../../theme/app_theme.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/address_provider.dart';
 import '../../models/product.dart';
@@ -46,39 +44,34 @@ class CartScreen extends StatelessWidget {
         .toList();
 
     return Scaffold(
-      backgroundColor: AppColors.warmWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: IconButton(
+            icon: const Icon(Icons.chevron_left_rounded, size: 24),
+            onPressed: onBack,
+          ),
+        ),
+        title: const Text('Your Cart'),
+        actions: [
+          if (cart.items.isNotEmpty)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 24),
+                child: Text(
+                  '${cart.totalCount} item${cart.totalCount != 1 ? 's' : ''}',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ),
+        ],
+      ),
       body: SafeArea(
         child: Stack(
           children: [
             Column(
               children: [
-                // Header
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: onBack,
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: AppDecorations.beigeRounded,
-                          alignment: Alignment.center,
-                          child: const Icon(Icons.chevron_left_rounded,
-                              color: AppColors.darkBrown, size: 24),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text('Your Cart', style: AppTextStyles.headlineLarge),
-                      const Spacer(),
-                      if (cart.items.isNotEmpty)
-                        Text(
-                          '${cart.totalCount} item${cart.totalCount != 1 ? 's' : ''}',
-                          style: AppTextStyles.bodySmall,
-                        ),
-                    ],
-                  ),
-                ),
                 Expanded(
                   child: cart.items.isEmpty
                       ? _EmptyCart(onBack: onBack)
@@ -112,7 +105,9 @@ class CartScreen extends StatelessWidget {
                             if (suggestions.isNotEmpty) ...[
                               const SizedBox(height: 8),
                               Text('Add something extra?',
-                                  style: AppTextStyles.headlineSmall),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall),
                               const SizedBox(height: 10),
                               SizedBox(
                                 height: 140,
@@ -125,65 +120,79 @@ class CartScreen extends StatelessWidget {
                                     final p = suggestions[i];
                                     return GestureDetector(
                                       onTap: () => onQuickAdd(p),
-                                      child: Container(
-                                        width: 120,
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: AppDecorations.card,
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              height: 56,
-                                              decoration: BoxDecoration(
-                                                  gradient: AppColors
-                                                      .productImageGradient,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              alignment: Alignment.center,
-                                              child: Text(p.image,
-                                                  style: const TextStyle(
-                                                      fontSize: 28)),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(p.name,
-                                                style: AppTextStyles.bodySmall
-                                                    .copyWith(
-                                                        color:
-                                                            AppColors.darkBrown,
-                                                        fontSize: 12),
-                                                overflow:
-                                                    TextOverflow.ellipsis),
-                                            const SizedBox(height: 4),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                    '\$${p.price.toStringAsFixed(2)}',
-                                                    style: AppTextStyles.label
-                                                        .copyWith(
-                                                            color: AppColors
-                                                                .darkBrown,
-                                                            fontSize: 13)),
-                                                const SizedBox(width: 6),
-                                                Container(
-                                                  width: 22,
-                                                  height: 22,
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.darkBrown,
+                                      child: Card(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                height: 56,
+                                                decoration: BoxDecoration(
+                                                    gradient: Theme.of(context)
+                                                        .extension<
+                                                            AppThemeExtension>()
+                                                        ?.productImageGradient,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            7),
+                                                            10)),
+                                                alignment: Alignment.center,
+                                                child: Text(p.image,
+                                                    style: const TextStyle(
+                                                        fontSize: 28)),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(p.name,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primary,
+                                                          fontSize: 12),
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
+                                              const SizedBox(height: 4),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                      '\$${p.price.toStringAsFixed(2)}',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .labelSmall
+                                                          ?.copyWith(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .primary,
+                                                              fontSize: 13)),
+                                                  const SizedBox(width: 6),
+                                                  Container(
+                                                    width: 22,
+                                                    height: 22,
+                                                    decoration: BoxDecoration(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              7),
+                                                    ),
+                                                    alignment: Alignment.center,
+                                                    child: Icon(
+                                                        Icons.add_rounded,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimary,
+                                                        size: 14),
                                                   ),
-                                                  alignment: Alignment.center,
-                                                  child: const Icon(
-                                                      Icons.add_rounded,
-                                                      color: AppColors.cream,
-                                                      size: 14),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     );
@@ -195,8 +204,11 @@ class CartScreen extends StatelessWidget {
 
                             // Address
                             Text('DELIVER TO',
-                                style: AppTextStyles.labelSmall.copyWith(
-                                    fontSize: 11, letterSpacing: 0.5)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(
+                                        fontSize: 11, letterSpacing: 0.5)),
                             const SizedBox(height: 8),
                             AddressSelector(
                               selectedId: addrProv.selectedId,
@@ -206,32 +218,44 @@ class CartScreen extends StatelessWidget {
                             const SizedBox(height: 16),
 
                             // Price summary
-                            Container(
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                color: AppColors.beige,
+                            Card(
+                              color: Theme.of(context).dividerColor,
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18),
                               ),
-                              child: Column(
-                                children: [
-                                  _PriceRow('Subtotal',
-                                      '\$${cart.subtotal.toStringAsFixed(2)}'),
-                                  const SizedBox(height: 10),
-                                  _PriceRow('Baking fee', '\$2.50'),
-                                  const Divider(
-                                      height: 24, color: Color(0x4DD4A574)),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('Total',
-                                          style: AppTextStyles.headlineSmall),
-                                      Text('\$${cart.total.toStringAsFixed(2)}',
-                                          style: AppTextStyles.priceLarge
-                                              .copyWith(fontSize: 20)),
-                                    ],
-                                  ),
-                                ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  children: [
+                                    _PriceRow('Subtotal',
+                                        '\$${cart.subtotal.toStringAsFixed(2)}'),
+                                    const SizedBox(height: 10),
+                                    _PriceRow('Baking fee', '\$2.50'),
+                                    const Divider(
+                                        height: 24, color: Color(0x4DD4A574)),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Total',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineSmall),
+                                        Text(
+                                            '\$${cart.total.toStringAsFixed(2)}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displaySmall
+                                                ?.copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                  fontSize: 20,
+                                                )),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -246,22 +270,9 @@ class CartScreen extends StatelessWidget {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        AppColors.warmWhite.withOpacity(0),
-                        AppColors.warmWhite
-                      ],
-                    ),
-                  ),
-                  child: PrimaryButton(
-                    label: 'Checkout — \$${cart.total.toStringAsFixed(2)}',
-                    onTap: onCheckout,
-                  ),
+                child: PrimaryButton(
+                  label: 'Checkout — \$${cart.total.toStringAsFixed(2)}',
+                  onTap: onCheckout,
                 ),
               ),
           ],
@@ -290,66 +301,79 @@ class _CartItemRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: AppDecorations.card,
-      child: Row(
-        children: [
-          Container(
-            width: 70,
-            height: 70,
-            decoration: BoxDecoration(
-              gradient: AppColors.productImageGradient,
-              borderRadius: BorderRadius.circular(14),
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                gradient: Theme.of(context)
+                    .extension<AppThemeExtension>()
+                    ?.productImageGradient,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              alignment: Alignment.center,
+              child: Text(item.image, style: const TextStyle(fontSize: 34)),
             ),
-            alignment: Alignment.center,
-            child: Text(item.image, style: const TextStyle(fontSize: 34)),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(item.name,
-                          style: AppTextStyles.bodyLarge.copyWith(
-                              color: AppColors.darkBrown,
-                              fontWeight: FontWeight.w400)),
-                    ),
-                    GestureDetector(
-                      onTap: onRemove,
-                      child: const Icon(Icons.delete_outline_rounded,
-                          color: AppColors.textLight, size: 18),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text('\$${total.toStringAsFixed(2)}',
-                    style: AppTextStyles.bodyLarge
-                        .copyWith(color: AppColors.darkBrown, fontSize: 16)),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    _SmallQtyBtn(
-                        icon: Icons.remove_rounded, onTap: onDecrement),
-                    const SizedBox(width: 12),
-                    Text('$quantity',
-                        style: AppTextStyles.bodyMedium.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.darkBrown)),
-                    const SizedBox(width: 12),
-                    _SmallQtyBtn(
-                        icon: Icons.add_rounded,
-                        onTap: onIncrement,
-                        filled: true),
-                  ],
-                ),
-              ],
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(item.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.w400)),
+                      ),
+                      GestureDetector(
+                        onTap: onRemove,
+                        child: Icon(Icons.delete_outline_rounded,
+                            color: Theme.of(context).textTheme.bodySmall?.color,
+                            size: 18),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text('\$${total.toStringAsFixed(2)}',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      _SmallQtyBtn(
+                          icon: Icons.remove_rounded, onTap: onDecrement),
+                      const SizedBox(width: 12),
+                      Text('$quantity',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      Theme.of(context).colorScheme.primary)),
+                      const SizedBox(width: 12),
+                      _SmallQtyBtn(
+                          icon: Icons.add_rounded,
+                          onTap: onIncrement,
+                          filled: true),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -371,13 +395,19 @@ class _SmallQtyBtn extends StatelessWidget {
         width: 28,
         height: 28,
         decoration: BoxDecoration(
-          color: filled ? AppColors.darkBrown : Colors.transparent,
-          border: filled ? null : Border.all(color: AppColors.beige),
+          color: filled
+              ? Theme.of(context).colorScheme.primary
+              : Colors.transparent,
+          border:
+              filled ? null : Border.all(color: Theme.of(context).dividerColor),
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,
         child: Icon(icon,
-            color: filled ? AppColors.cream : AppColors.softBrown, size: 14),
+            color: filled
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).colorScheme.primary,
+            size: 14),
       ),
     );
   }
@@ -395,11 +425,13 @@ class _PriceRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label,
-            style:
-                AppTextStyles.bodyMedium.copyWith(color: AppColors.textLight)),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).textTheme.bodySmall?.color)),
         Text(value,
-            style:
-                AppTextStyles.bodyMedium.copyWith(color: AppColors.darkBrown)),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Theme.of(context).colorScheme.primary)),
       ],
     );
   }
@@ -419,10 +451,12 @@ class _EmptyCart extends StatelessWidget {
         children: [
           const Text('🧺', style: TextStyle(fontSize: 64)),
           const SizedBox(height: 16),
-          Text('Your cart is empty', style: AppTextStyles.headlineMedium),
+          Text('Your cart is empty',
+              style: Theme.of(context).textTheme.headlineMedium),
           const SizedBox(height: 6),
           Text("Looks like you haven't added anything yet",
-              style: AppTextStyles.bodySmall, textAlign: TextAlign.center),
+              style: Theme.of(context).textTheme.bodySmall,
+              textAlign: TextAlign.center),
           const SizedBox(height: 24),
           PrimaryButton(label: 'Browse Menu', onTap: onBack),
         ],

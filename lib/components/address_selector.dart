@@ -124,8 +124,8 @@ class AddressSelector extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
       decoration: BoxDecoration(
         color: isPickup
-            ? AppColors.sage.withOpacity(0.13)
-            : AppColors.golden.withOpacity(0.18),
+            ? AppColors.sage.withValues(alpha: 0.13)
+            : AppColors.golden.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(5),
       ),
       child: Text(
@@ -204,7 +204,7 @@ class AddressBottomSheet extends StatelessWidget {
                       height: 40,
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? AppColors.darkBrown.withOpacity(0.1)
+                            ? AppColors.darkBrown.withValues(alpha: 0.1)
                             : AppColors.beige,
                         borderRadius: BorderRadius.circular(12),
                       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../theme/app_text_styles.dart';
+
 import '../../data/bakery_data.dart';
 import '../../providers/favourites_provider.dart';
 import '../../providers/cart_provider.dart';
@@ -28,10 +28,11 @@ class FavouritesScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('My Favourites', style: AppTextStyles.displayMedium),
+                Text('My Favourites',
+                    style: Theme.of(context).textTheme.displayMedium),
                 const SizedBox(height: 4),
                 Text('${favs.length} saved item${favs.length != 1 ? 's' : ''}',
-                    style: AppTextStyles.bodySmall),
+                    style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),
@@ -77,10 +78,12 @@ class _EmptyFavourites extends StatelessWidget {
           children: [
             const Text('❤️', style: TextStyle(fontSize: 56)),
             const SizedBox(height: 16),
-            Text('No favourites yet', style: AppTextStyles.headlineMedium),
+            Text('No favourites yet',
+                style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 8),
             Text("Tap the ♡ on any item to save it here",
-                style: AppTextStyles.bodySmall, textAlign: TextAlign.center),
+                style: Theme.of(context).textTheme.bodySmall,
+                textAlign: TextAlign.center),
           ],
         ),
       ),

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
-import '../../theme/app_decorations.dart';
 import '../../components/primary_button.dart';
 
 class OrderSuccessScreen extends StatefulWidget {
@@ -63,7 +60,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.warmWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -77,15 +74,21 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [AppColors.sage, Color(0xFF88B07A)],
+                      colors: [
+                        Theme.of(context).colorScheme.primary,
+                        const Color(0xFF88B07A)
+                      ],
                     ),
                     borderRadius: BorderRadius.circular(40),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.sage.withOpacity(0.3),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.3),
                         blurRadius: 30,
                         offset: const Offset(0, 10),
                       ),
@@ -105,89 +108,114 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                 child: Column(
                   children: [
                     Text('🎉 Order Placed!',
-                        style:
-                            AppTextStyles.displayLarge.copyWith(fontSize: 26)),
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayLarge
+                            ?.copyWith(fontSize: 26)),
                     const SizedBox(height: 8),
                     Text(
                       '#OD-2849 • Est. ready at 11:00 AM',
-                      style: AppTextStyles.bodySmall.copyWith(fontSize: 13),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(fontSize: 13),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 32),
               // Progress
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: AppDecorations.card,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Order Progress',
-                            style: AppTextStyles.headlineSmall),
-                        Text('Step 1 of 3',
-                            style: AppTextStyles.label
-                                .copyWith(color: AppColors.caramel)),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    ..._steps.asMap().entries.map((e) {
-                      final i = e.key;
-                      final s = e.value;
-                      final isActive = i == 0;
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 14),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: isActive
-                                    ? AppColors.sage.withOpacity(0.14)
-                                    : AppColors.beige,
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(s.icon,
-                                  style: const TextStyle(fontSize: 18)),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(s.label,
-                                      style: AppTextStyles.bodyMedium.copyWith(
-                                        color: isActive
-                                            ? AppColors.darkBrown
-                                            : AppColors.textLight,
-                                        fontWeight: isActive
-                                            ? FontWeight.w500
-                                            : FontWeight.w400,
-                                      )),
-                                  Text(s.desc,
-                                      style: AppTextStyles.bodySmall
-                                          .copyWith(fontSize: 12)),
-                                ],
-                              ),
-                            ),
-                            if (isActive)
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Order Progress',
+                              style: Theme.of(context).textTheme.headlineSmall),
+                          Text('Step 1 of 3',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary)),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      ..._steps.asMap().entries.map((e) {
+                        final i = e.key;
+                        final s = e.value;
+                        final isActive = i == 0;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 14),
+                          child: Row(
+                            children: [
                               Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                    color: AppColors.sage,
-                                    shape: BoxShape.circle),
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: isActive
+                                      ? Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer
+                                      : Theme.of(context)
+                                          .dividerColor
+                                          .withValues(alpha: 0.5),
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(s.icon,
+                                    style: const TextStyle(fontSize: 18)),
                               ),
-                          ],
-                        ),
-                      );
-                    }),
-                  ],
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(s.label,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              color: isActive
+                                                  ? Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                              fontWeight: isActive
+                                                  ? FontWeight.w500
+                                                  : FontWeight.w400,
+                                            )),
+                                    Text(s.desc,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(fontSize: 12)),
+                                  ],
+                                ),
+                              ),
+                              if (isActive)
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      shape: BoxShape.circle),
+                                ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
                 ),
               ),
               const Spacer(),
@@ -203,8 +231,9 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   alignment: Alignment.center,
                   child: Text('Continue Shopping',
-                      style: AppTextStyles.bodyMedium
-                          .copyWith(color: AppColors.softBrown)),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant)),
                 ),
               ),
               const SizedBox(height: 24),

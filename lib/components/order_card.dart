@@ -37,7 +37,7 @@ class OrderCard extends StatelessWidget {
         boxShadow: featured
             ? [
                 BoxShadow(
-                  color: AppColors.darkBrown.withOpacity(0.2),
+                  color: AppColors.darkBrown.withValues(alpha: 0.2),
                   blurRadius: 15,
                   offset: const Offset(0, 4),
                 )
@@ -68,7 +68,7 @@ class OrderCard extends StatelessWidget {
                 '· ${order.date.split(',').first}',
                 style: AppTextStyles.caption.copyWith(
                   color: featured
-                      ? Colors.white.withOpacity(0.5)
+                      ? Colors.white.withValues(alpha: 0.5)
                       : AppColors.textLight,
                 ),
               ),
@@ -79,7 +79,7 @@ class OrderCard extends StatelessWidget {
                 '${item.name} × ${item.qty}',
                 style: AppTextStyles.bodySmall.copyWith(
                   color: featured
-                      ? Colors.white.withOpacity(0.8)
+                      ? Colors.white.withValues(alpha: 0.8)
                       : AppColors.textLight,
                   fontSize: 13,
                 ),
@@ -99,8 +99,8 @@ class OrderCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: featured
-                      ? Colors.white.withOpacity(0.12)
-                      : AppColors.sage.withOpacity(0.13),
+                      ? Colors.white.withValues(alpha: 0.12)
+                      : AppColors.sage.withValues(alpha: 0.13),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
-import '../../theme/app_decorations.dart';
 import '../../models/address.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/address_provider.dart';
@@ -41,34 +38,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final step1Label = _stepLabel(addr);
 
     return Scaffold(
-      backgroundColor: AppColors.warmWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: IconButton(
+            icon: const Icon(Icons.chevron_left_rounded, size: 24),
+            onPressed: widget.onBack,
+          ),
+        ),
+        title: const Text('Checkout'),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
             Column(
               children: [
-                // Header
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: widget.onBack,
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: AppDecorations.beigeRounded,
-                          alignment: Alignment.center,
-                          child: const Icon(Icons.chevron_left_rounded,
-                              color: AppColors.darkBrown, size: 24),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text('Checkout', style: AppTextStyles.headlineLarge),
-                    ],
-                  ),
-                ),
-
                 // Step indicator
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
@@ -116,30 +101,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               bottom: 0,
               left: 0,
               right: 0,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      AppColors.warmWhite.withValues(alpha: 0),
-                      AppColors.warmWhite
-                    ],
-                  ),
-                ),
-                child: PrimaryButton(
-                  label: _step < 3
-                      ? 'Continue'
-                      : 'Place Order — \$${cart.total.toStringAsFixed(2)}',
-                  onTap: () {
-                    if (_step < 3) {
-                      setState(() => _step++);
-                    } else {
-                      widget.onPlaceOrder();
-                    }
-                  },
-                ),
+              child: PrimaryButton(
+                label: _step < 3
+                    ? 'Continue'
+                    : 'Place Order — \$${cart.total.toStringAsFixed(2)}',
+                onTap: () {
+                  if (_step < 3) {
+                    setState(() => _step++);
+                  } else {
+                    widget.onPlaceOrder();
+                  }
+                },
               ),
             ),
           ],
@@ -168,17 +140,21 @@ class _StepIndicator extends StatelessWidget {
             duration: const Duration(milliseconds: 400),
             height: 3,
             decoration: BoxDecoration(
-              color: active ? AppColors.darkBrown : AppColors.beige,
+              color: active
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).dividerColor,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
           const SizedBox(height: 6),
           Text(
             label,
-            style: AppTextStyles.labelSmall.copyWith(
-              color: active ? AppColors.darkBrown : AppColors.textLight,
-              fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
-            ),
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: active
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
+                ),
           ),
         ],
       ),
@@ -197,7 +173,7 @@ class _Step1 extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('${addr.type == 'Pickup' ? 'Pickup' : 'Delivery'} Details',
-            style: AppTextStyles.headlineSmall),
+            style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 16),
         _InfoTile(
           label: addr.type == 'Pickup' ? 'PICKUP LOCATION' : 'DELIVERY ADDRESS',
@@ -213,31 +189,30 @@ class _Step1 extends StatelessWidget {
           subtitle: null,
         ),
         const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.beige, width: 1.5),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('SPECIAL INSTRUCTIONS',
-                  style: AppTextStyles.labelSmall
-                      .copyWith(fontSize: 11, letterSpacing: 0.5)),
-              const SizedBox(height: 8),
-              TextField(
-                maxLines: 2,
-                decoration: const InputDecoration(
-                  hintText: 'Any special requests for your order...',
-                  border: InputBorder.none,
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('SPECIAL INSTRUCTIONS',
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelSmall
+                        ?.copyWith(fontSize: 11, letterSpacing: 0.5)),
+                const SizedBox(height: 8),
+                TextField(
+                  maxLines: 2,
+                  decoration: const InputDecoration(
+                    hintText: 'Any special requests for your order...',
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                style: AppTextStyles.bodyMedium,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -260,42 +235,47 @@ class _InfoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.beige, width: 1.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label,
-              style: AppTextStyles.labelSmall
-                  .copyWith(fontSize: 11, letterSpacing: 0.5)),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Text(icon, style: const TextStyle(fontSize: 16)),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.darkBrown)),
-                    if (subtitle != null)
-                      Text(subtitle!,
-                          style:
-                              AppTextStyles.bodySmall.copyWith(fontSize: 12)),
-                  ],
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label,
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(fontSize: 11, letterSpacing: 0.5)),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Text(icon, style: const TextStyle(fontSize: 16)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color:
+                                      Theme.of(context).colorScheme.primary)),
+                      if (subtitle != null)
+                        Text(subtitle!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(fontSize: 12)),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -317,7 +297,8 @@ class _Step2 extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Payment Method', style: AppTextStyles.headlineSmall),
+        Text('Payment Method',
+            style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 16),
         ...methods.asMap().entries.map((e) {
           final i = e.key;
@@ -325,64 +306,77 @@ class _Step2 extends StatelessWidget {
           final isSelected = selected == i;
           return GestureDetector(
             onTap: () => onSelect(i),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.white,
+            child: Card(
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                    color: isSelected ? AppColors.darkBrown : AppColors.beige,
+                side: BorderSide(
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).dividerColor,
                     width: 1.5),
               ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppColors.darkBrown.withValues(alpha: 0.1)
-                          : AppColors.beige,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(m.icon, style: const TextStyle(fontSize: 20)),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(m.label,
-                            style: AppTextStyles.bodyLarge
-                                .copyWith(fontWeight: FontWeight.w500)),
-                        Text(m.sub,
-                            style:
-                                AppTextStyles.bodySmall.copyWith(fontSize: 12)),
-                      ],
-                    ),
-                  ),
-                  if (isSelected)
+              margin: const EdgeInsets.only(bottom: 10),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
                     Container(
-                      width: 20,
-                      height: 20,
-                      decoration: const BoxDecoration(
-                          color: AppColors.darkBrown, shape: BoxShape.circle),
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.check_rounded,
-                          color: AppColors.cream, size: 12),
-                    )
-                  else
-                    Container(
-                      width: 20,
-                      height: 20,
+                      width: 44,
+                      height: 44,
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.beige, width: 2)),
+                        color: isSelected
+                            ? Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withValues(alpha: 0.1)
+                            : Theme.of(context).dividerColor,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(m.icon, style: const TextStyle(fontSize: 20)),
                     ),
-                ],
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(m.label,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(fontWeight: FontWeight.w500)),
+                          Text(m.sub,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                    if (isSelected)
+                      Container(
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            shape: BoxShape.circle),
+                        alignment: Alignment.center,
+                        child: Icon(Icons.check_rounded,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            size: 12),
+                      )
+                    else
+                      Container(
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: Theme.of(context).dividerColor,
+                                width: 2)),
+                      ),
+                  ],
+                ),
               ),
             ),
           );
@@ -403,52 +397,68 @@ class _Step3 extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Order Summary', style: AppTextStyles.headlineSmall),
+        Text('Order Summary', style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: AppDecorations.card,
-          child: Column(
-            children: [
-              ...cart.items.map((item) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Row(
-                      children: [
-                        Text(item.product.image,
-                            style: const TextStyle(fontSize: 22)),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(item.product.name,
-                                  style: AppTextStyles.bodyMedium
-                                      .copyWith(color: AppColors.darkBrown)),
-                              Text('× ${item.quantity}',
-                                  style: AppTextStyles.bodySmall
-                                      .copyWith(fontSize: 12)),
-                            ],
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                ...cart.items.map((item) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        children: [
+                          Text(item.product.image,
+                              style: const TextStyle(fontSize: 22)),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(item.product.name,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary)),
+                                Text('× ${item.quantity}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(fontSize: 12)),
+                              ],
+                            ),
                           ),
-                        ),
-                        Text(
-                          '\$${(item.product.price * item.quantity).toStringAsFixed(2)}',
-                          style: AppTextStyles.bodyMedium.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.darkBrown),
-                        ),
-                      ],
-                    ),
-                  )),
-              const Divider(color: AppColors.beige, height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Total', style: AppTextStyles.headlineSmall),
-                  Text('\$${cart.total.toStringAsFixed(2)}',
-                      style: AppTextStyles.priceLarge.copyWith(fontSize: 20)),
-                ],
-              ),
-            ],
+                          Text(
+                            '\$${(item.product.price * item.quantity).toStringAsFixed(2)}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                          ),
+                        ],
+                      ),
+                    )),
+                Divider(color: Theme.of(context).dividerColor, height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total',
+                        style: Theme.of(context).textTheme.headlineSmall),
+                    Text('\$${cart.total.toStringAsFixed(2)}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall
+                            ?.copyWith(fontSize: 20)),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ],

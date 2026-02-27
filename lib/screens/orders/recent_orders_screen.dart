@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
-import '../../theme/app_decorations.dart';
 import '../../data/bakery_data.dart';
 import '../../models/order.dart';
 
@@ -65,33 +62,21 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
     final totalSpent = orders.fold<double>(0, (sum, o) => sum + o.total);
 
     return Scaffold(
-      backgroundColor: AppColors.warmWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: IconButton(
+            icon: const Icon(Icons.chevron_left_rounded, size: 24),
+            onPressed: widget.onBack,
+          ),
+        ),
+        title: const Text('Recent Orders'),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header ───────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: widget.onBack,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: AppDecorations.beigeRounded,
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.chevron_left_rounded,
-                          color: AppColors.darkBrown, size: 24),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text('Recent Orders', style: AppTextStyles.headlineLarge),
-                ],
-              ),
-            ),
-
             // ── Scrollable body ──────────────────────────────────
             Expanded(
               child: FadeTransition(
@@ -106,10 +91,13 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
                         padding: const EdgeInsets.all(24),
                         margin: const EdgeInsets.only(bottom: 24),
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
+                          gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [AppColors.darkBrown, AppColors.softBrown],
+                            colors: [
+                              Theme.of(context).colorScheme.primary,
+                              Theme.of(context).colorScheme.onSurfaceVariant
+                            ],
                           ),
                           borderRadius: BorderRadius.circular(22),
                         ),
@@ -117,11 +105,16 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('THIS MONTH',
-                                style: AppTextStyles.labelSmall.copyWith(
-                                  color: AppColors.golden,
-                                  letterSpacing: 1.5,
-                                  fontSize: 11,
-                                )),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary,
+                                      letterSpacing: 1.5,
+                                      fontSize: 11,
+                                    )),
                             const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -132,19 +125,26 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
                                   children: [
                                     Text(
                                       '${orders.length}',
-                                      style:
-                                          AppTextStyles.displayLarge.copyWith(
-                                        color: AppColors.cream,
-                                        fontSize: 32,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayLarge
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                            fontSize: 32,
+                                          ),
                                     ),
                                     Text(
                                       'orders placed',
-                                      style: AppTextStyles.bodySmall.copyWith(
-                                        color:
-                                            Colors.white.withValues(alpha: 0.5),
-                                        fontSize: 13,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Colors.white
+                                                .withValues(alpha: 0.5),
+                                            fontSize: 13,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -153,19 +153,26 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
                                   children: [
                                     Text(
                                       '\$${totalSpent.toStringAsFixed(2)}',
-                                      style:
-                                          AppTextStyles.displayLarge.copyWith(
-                                        color: AppColors.cream,
-                                        fontSize: 24,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayLarge
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                            fontSize: 24,
+                                          ),
                                     ),
                                     Text(
                                       'total spent',
-                                      style: AppTextStyles.bodySmall.copyWith(
-                                        color:
-                                            Colors.white.withValues(alpha: 0.5),
-                                        fontSize: 13,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Colors.white
+                                                .withValues(alpha: 0.5),
+                                            fontSize: 13,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -223,116 +230,120 @@ class _OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.beige, width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Order header — id, date, status badge
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Order ${order.id}',
-                    style: AppTextStyles.bodyLarge.copyWith(
-                        color: AppColors.darkBrown,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    order.date,
-                    style: AppTextStyles.bodySmall.copyWith(fontSize: 12),
-                  ),
-                ],
-              ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                decoration: BoxDecoration(
-                  color: AppColors.sage.withValues(alpha: 0.095),
-                  borderRadius: BorderRadius.circular(10),
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Order header — id, date, status badge
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Order ${order.id}',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      order.date,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(fontSize: 12),
+                    ),
+                  ],
                 ),
-                child: Text(
-                  '✓ ${order.status}',
-                  style: AppTextStyles.label.copyWith(
-                      color: AppColors.sage,
+                Chip(
+                  label: Text('✓ ${order.status}'),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.secondaryContainer,
+                  labelStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
                       fontSize: 11,
                       fontWeight: FontWeight.w500),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  side: BorderSide.none,
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
+              ],
+            ),
+            const SizedBox(height: 14),
 
-          // Item list
-          ...order.items.map<Widget>((item) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 6),
+            // Item list
+            ...order.items.map<Widget>((item) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      item.name,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 14),
+                    ),
+                    Text(
+                      '× ${item.qty}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(fontSize: 13, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              );
+            }),
+
+            const SizedBox(height: 14),
+
+            // Footer — total + reorder button
+            Container(
+              padding: const EdgeInsets.only(top: 12),
+              decoration: BoxDecoration(
+                border: Border(
+                    top: BorderSide(color: Theme.of(context).dividerColor)),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    item.name,
-                    style: AppTextStyles.bodyMedium
-                        .copyWith(color: AppColors.darkBrown, fontSize: 14),
+                    '\$${order.total.toStringAsFixed(2)}',
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayMedium
+                        ?.copyWith(fontSize: 17),
                   ),
-                  Text(
-                    '× ${item.qty}',
-                    style: AppTextStyles.bodySmall
-                        .copyWith(fontSize: 13, fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-            );
-          }),
-
-          const SizedBox(height: 14),
-
-          // Footer — total + reorder button
-          Container(
-            padding: const EdgeInsets.only(top: 12),
-            decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: AppColors.beige)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '\$${order.total.toStringAsFixed(2)}',
-                  style: AppTextStyles.displayMedium.copyWith(fontSize: 17),
-                ),
-                GestureDetector(
-                  onTap: onReorder,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border:
-                          Border.all(color: AppColors.darkBrown, width: 1.5),
+                  OutlinedButton(
+                    onPressed: onReorder,
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 8),
+                      side: BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 1.5),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
                     ),
                     child: Text(
                       'Reorder',
-                      style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.darkBrown,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w500,
                           fontSize: 13),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

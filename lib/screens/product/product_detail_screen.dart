@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
-import '../../theme/app_decorations.dart';
+import '../../theme/app_theme.dart';
 import '../../models/product.dart';
 import '../../data/bakery_data.dart';
 import '../../providers/favourites_provider.dart';
@@ -92,7 +90,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         .toList();
 
     return Scaffold(
-      backgroundColor: AppColors.warmWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           CustomScrollView(
@@ -101,18 +99,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               SliverAppBar(
                 expandedHeight: 280,
                 pinned: true,
-                backgroundColor: AppColors.warmWhite,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 leading: GestureDetector(
                   onTap: widget.onBack,
                   child: Container(
                     margin: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.85),
+                      color: Theme.of(context)
+                          .scaffoldBackgroundColor
+                          .withValues(alpha: 0.85),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     alignment: Alignment.center,
-                    child: const Icon(Icons.chevron_left_rounded,
-                        color: AppColors.darkBrown, size: 24),
+                    child: Icon(Icons.chevron_left_rounded,
+                        color: Theme.of(context).colorScheme.primary, size: 24),
                   ),
                 ),
                 actions: [
@@ -123,7 +123,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.85),
+                        color: Theme.of(context)
+                            .scaffoldBackgroundColor
+                            .withValues(alpha: 0.85),
                         borderRadius: BorderRadius.circular(14),
                       ),
                       alignment: Alignment.center,
@@ -131,7 +133,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         isFav
                             ? Icons.favorite_rounded
                             : Icons.favorite_border_rounded,
-                        color: AppColors.terracotta,
+                        color: Theme.of(context).colorScheme.tertiary,
                         size: 20,
                       ),
                     ),
@@ -141,27 +143,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.85),
+                      color: Theme.of(context)
+                          .scaffoldBackgroundColor
+                          .withValues(alpha: 0.85),
                       borderRadius: BorderRadius.circular(14),
                     ),
                     alignment: Alignment.center,
-                    child: const Icon(Icons.share_outlined,
-                        color: AppColors.softBrown, size: 18),
+                    child: Icon(Icons.share_outlined,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        size: 18),
                   ),
                 ],
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          AppColors.beige,
-                          AppColors.lightGold,
-                          AppColors.golden
-                        ],
-                        stops: [0.0, 0.5, 1.0],
-                      ),
+                    decoration: BoxDecoration(
+                      gradient: Theme.of(context)
+                          .extension<AppThemeExtension>()
+                          ?.heroGradient,
                     ),
                     child: Stack(
                       alignment: Alignment.center,
@@ -176,13 +174,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 14, vertical: 6),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surface
+                                    .withValues(alpha: 0.9),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text('✦ ${widget.product.badge}',
-                                  style: AppTextStyles.label.copyWith(
-                                      color: AppColors.darkBrown,
-                                      fontWeight: FontWeight.w600)),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium
+                                      ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          fontWeight: FontWeight.w600)),
                             ),
                           ),
                         // Gallery dots
@@ -201,8 +207,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   height: 7,
                                   decoration: BoxDecoration(
                                     color: _activeImage == i
-                                        ? AppColors.white
-                                        : Colors.white.withOpacity(0.45),
+                                        ? Theme.of(context).colorScheme.surface
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .surface
+                                            .withValues(alpha: 0.45),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                 ),
@@ -220,10 +229,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               SliverToBoxAdapter(
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(24, 24, 24, 140),
-                  decoration: const BoxDecoration(
-                    color: AppColors.warmWhite,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
                     borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(28)),
+                        const BorderRadius.vertical(top: Radius.circular(28)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,17 +246,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(widget.product.name,
-                                    style: AppTextStyles.displayMedium),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium),
                                 const SizedBox(height: 6),
                                 Text(widget.product.time,
-                                    style: AppTextStyles.bodySmall),
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
                               ],
                             ),
                           ),
                           Text(
                             '\$${widget.product.price.toStringAsFixed(2)}',
-                            style:
-                                AppTextStyles.priceLarge.copyWith(fontSize: 28),
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall
+                                ?.copyWith(fontSize: 28),
                           ),
                         ],
                       ),
@@ -260,8 +274,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           const SizedBox(width: 6),
                           Text(
                             '${widget.product.rating} (${widget.product.reviews} reviews)',
-                            style:
-                                AppTextStyles.bodySmall.copyWith(fontSize: 12),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(fontSize: 12),
                           ),
                         ],
                       ),
@@ -269,8 +285,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                       // Description
                       Text(widget.product.description,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.textLight, height: 1.6)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.color,
+                                  height: 1.6)),
                       const SizedBox(height: 18),
 
                       // Tags
@@ -286,18 +309,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 horizontal: 12, vertical: 5),
                             decoration: BoxDecoration(
                               color: isGood
-                                  ? AppColors.sage.withOpacity(0.13)
-                                  : AppColors.roseDust.withOpacity(0.13),
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .errorContainer,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
                               tag,
-                              style: AppTextStyles.label.copyWith(
-                                color: isGood
-                                    ? AppColors.sage
-                                    : AppColors.roseDust,
-                                fontSize: 12,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                    color: isGood
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onSecondaryContainer
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onErrorContainer,
+                                    fontSize: 12,
+                                  ),
                             ),
                           );
                         }).toList(),
@@ -307,7 +341,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       // Context-aware option
                       if (contextOpt != null) ...[
                         Text(contextOpt.label,
-                            style: AppTextStyles.headlineSmall),
+                            style: Theme.of(context).textTheme.headlineSmall),
                         const SizedBox(height: 10),
                         Row(
                           children:
@@ -327,19 +361,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         vertical: 10),
                                     decoration: BoxDecoration(
                                       color: _contextChoice == i
-                                          ? AppColors.darkBrown
-                                          : AppColors.beige,
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                          : Theme.of(context).dividerColor,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     alignment: Alignment.center,
                                     child: Text(
                                       contextOpt.options[i],
-                                      style: AppTextStyles.label.copyWith(
-                                        color: _contextChoice == i
-                                            ? AppColors.cream
-                                            : AppColors.softBrown,
-                                        fontSize: 11,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium
+                                          ?.copyWith(
+                                            color: _contextChoice == i
+                                                ? Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
+                                            fontSize: 11,
+                                          ),
                                     ),
                                   ),
                                 ),
@@ -353,7 +396,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       // Sweetness (pastries/cakes/cookies)
                       if (widget.product.category != 'breads') ...[
                         Text('Sweetness Level',
-                            style: AppTextStyles.headlineSmall),
+                            style: Theme.of(context).textTheme.headlineSmall),
                         const SizedBox(height: 10),
                         Row(
                           children: List.generate(_sweetnessLabels.length, (i) {
@@ -371,19 +414,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         vertical: 10),
                                     decoration: BoxDecoration(
                                       color: _sweetness == i
-                                          ? AppColors.darkBrown
-                                          : AppColors.beige,
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                          : Theme.of(context).dividerColor,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     alignment: Alignment.center,
                                     child: Text(
                                       _sweetnessLabels[i],
-                                      style: AppTextStyles.label.copyWith(
-                                        color: _sweetness == i
-                                            ? AppColors.cream
-                                            : AppColors.softBrown,
-                                        fontSize: 12,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium
+                                          ?.copyWith(
+                                            color: _sweetness == i
+                                                ? Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
+                                            fontSize: 12,
+                                          ),
                                     ),
                                   ),
                                 ),
@@ -399,12 +451,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 14),
                         decoration: BoxDecoration(
-                          color: AppColors.beige,
+                          color: Theme.of(context)
+                              .dividerColor
+                              .withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Row(
                           children: [
-                            Text('Quantity', style: AppTextStyles.bodyLarge),
+                            Text('Quantity',
+                                style: Theme.of(context).textTheme.bodyLarge),
                             const Spacer(),
                             _QtyButton(
                               icon: Icons.remove_rounded,
@@ -415,8 +470,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             const SizedBox(width: 18),
                             Text(
                               '$_quantity',
-                              style: AppTextStyles.headlineSmall
-                                  .copyWith(fontWeight: FontWeight.w700),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(fontWeight: FontWeight.w700),
                             ),
                             const SizedBox(width: 18),
                             _QtyButton(
@@ -433,7 +490,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Reviews', style: AppTextStyles.headlineSmall),
+                          Text('Reviews',
+                              style: Theme.of(context).textTheme.headlineSmall),
                           GestureDetector(
                             onTap: () => setState(
                                 () => _showAllReviews = !_showAllReviews),
@@ -441,10 +499,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               _showAllReviews
                                   ? 'Show less'
                                   : 'See all ${widget.product.reviews} →',
-                              style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.caramel,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 13),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13),
                             ),
                           ),
                         ],
@@ -460,7 +523,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                       // You May Also Like
                       Text('You May Also Like',
-                          style: AppTextStyles.headlineSmall),
+                          style: Theme.of(context).textTheme.headlineSmall),
                       const SizedBox(height: 14),
                       SizedBox(
                         height: 190,
@@ -474,57 +537,73 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             final p = related[i];
                             return GestureDetector(
                               onTap: () => widget.onProductTap(p),
-                              child: Container(
+                              child: SizedBox(
                                 width: 140,
-                                decoration: AppDecorations.card,
-                                clipBehavior: Clip.hardEdge,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      height: 90,
-                                      width: double.infinity,
-                                      decoration: const BoxDecoration(
-                                          gradient:
-                                              AppColors.productImageGradient),
-                                      alignment: Alignment.center,
-                                      child: Text(p.image,
-                                          style: const TextStyle(fontSize: 40)),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            p.name,
-                                            style: AppTextStyles.bodyMedium
-                                                .copyWith(
-                                                    color: AppColors.darkBrown,
-                                                    fontSize: 13),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                '\$${p.price.toStringAsFixed(2)}',
-                                                style: AppTextStyles.label
-                                                    .copyWith(
-                                                        color:
-                                                            AppColors.darkBrown,
-                                                        fontSize: 13),
-                                              ),
-                                              Text(p.time,
-                                                  style: AppTextStyles.caption),
-                                            ],
-                                          ),
-                                        ],
+                                child: Card(
+                                  clipBehavior: Clip.hardEdge,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 90,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                            gradient: Theme.of(context)
+                                                .extension<AppThemeExtension>()
+                                                ?.productImageGradient),
+                                        alignment: Alignment.center,
+                                        child: Text(p.image,
+                                            style:
+                                                const TextStyle(fontSize: 40)),
                                       ),
-                                    ),
-                                  ],
+                                      Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              p.name,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
+                                                      fontSize: 13),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  '\$${p.price.toStringAsFixed(2)}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .labelMedium
+                                                      ?.copyWith(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primary,
+                                                          fontSize: 13),
+                                                ),
+                                                Text(p.time,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall
+                                                        ?.copyWith(
+                                                            fontSize: 10)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
@@ -550,8 +629,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    AppColors.warmWhite.withOpacity(0),
-                    AppColors.warmWhite,
+                    Theme.of(context)
+                        .scaffoldBackgroundColor
+                        .withValues(alpha: 0),
+                    Theme.of(context).scaffoldBackgroundColor,
                   ],
                 ),
               ),
@@ -584,14 +665,21 @@ class _QtyButton extends StatelessWidget {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: filled ? AppColors.darkBrown : Colors.transparent,
+          color: filled
+              ? Theme.of(context).colorScheme.primary
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
-          border:
-              filled ? null : Border.all(color: AppColors.golden, width: 1.5),
+          border: filled
+              ? null
+              : Border.all(
+                  color: Theme.of(context).colorScheme.tertiary, width: 1.5),
         ),
         alignment: Alignment.center,
         child: Icon(icon,
-            color: filled ? AppColors.cream : AppColors.darkBrown, size: 20),
+            color: filled
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).colorScheme.primary,
+            size: 20),
       ),
     );
   }
@@ -610,57 +698,68 @@ class _ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Card(
       margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(16),
-      decoration: AppDecorations.card,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                      colors: [AppColors.golden, AppColors.caramel]),
-                  borderRadius: BorderRadius.circular(10),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    gradient: Theme.of(context)
+                        .extension<AppThemeExtension>()
+                        ?.primaryGradient,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    review.avatar,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13),
+                  ),
                 ),
-                alignment: Alignment.center,
-                child: Text(
-                  review.avatar,
-                  style: const TextStyle(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(review.name,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w500)),
+                      Row(
+                        children: [
+                          StarRating(
+                              rating: review.rating.toDouble(), size: 10),
+                          const SizedBox(width: 6),
+                          Text(review.date,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(fontSize: 10)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(review.name,
-                        style: AppTextStyles.bodyMedium
-                            .copyWith(fontWeight: FontWeight.w500)),
-                    Row(
-                      children: [
-                        StarRating(rating: review.rating.toDouble(), size: 10),
-                        const SizedBox(width: 6),
-                        Text(review.date, style: AppTextStyles.caption),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(review.text,
-              style:
-                  AppTextStyles.bodySmall.copyWith(height: 1.5, fontSize: 13)),
-        ],
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(review.text,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(height: 1.5, fontSize: 13)),
+          ],
+        ),
       ),
     );
   }

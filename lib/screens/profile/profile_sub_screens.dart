@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
 
 import '../../components/primary_button.dart';
 import '../../data/bakery_data.dart';
@@ -22,7 +20,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.warmWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -32,10 +30,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 children: [
                   IconButton(
                     onPressed: widget.onBack,
-                    icon: const Icon(Icons.chevron_left_rounded, size: 24),
+                    icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
-                      backgroundColor: AppColors.beige,
-                      foregroundColor: AppColors.darkBrown,
+                      backgroundColor: Theme.of(context).dividerColor,
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
                       minimumSize: const Size(40, 40),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -43,7 +41,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text('Edit Profile', style: AppTextStyles.headlineLarge),
+                  Text('Edit Profile',
+                      style: Theme.of(context).textTheme.headlineLarge),
                 ],
               ),
             ),
@@ -61,22 +60,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             width: 80,
                             height: 80,
                             decoration: BoxDecoration(
-                              gradient: const LinearGradient(colors: [
-                                AppColors.golden,
-                                AppColors.caramel
+                              gradient: LinearGradient(colors: [
+                                Theme.of(context).colorScheme.secondary,
+                                Theme.of(context).colorScheme.tertiary
                               ]),
                               borderRadius: BorderRadius.circular(28),
                             ),
                             alignment: Alignment.center,
                             child: Text('S',
-                                style: AppTextStyles.displayLarge.copyWith(
-                                    color: Colors.white, fontSize: 32)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge
+                                    ?.copyWith(
+                                        color: Colors.white, fontSize: 32)),
                           ),
                           const SizedBox(height: 8),
                           Text('Change photo',
-                              style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.caramel,
-                                  fontWeight: FontWeight.w500)),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary,
+                                      fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ),
@@ -99,16 +106,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: AppColors.white,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: AppColors.beige, width: 1.5),
+                        border: Border.all(
+                            color: Theme.of(context).dividerColor, width: 1.5),
                       ),
                       child: TextField(
                         maxLines: 3,
                         decoration: InputDecoration(
                           hintText: 'Pastry enthusiast and weekend baker...',
-                          hintStyle: AppTextStyles.bodyMedium
-                              .copyWith(color: AppColors.textLight),
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  color: Theme.of(context).colorScheme.outline),
                           border: InputBorder.none,
                           isDense: true,
                           contentPadding: EdgeInsets.zero,
@@ -129,18 +140,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           onSelected: (selected) {
                             if (selected) setState(() => _selectedDiet = d);
                           },
-                          backgroundColor: AppColors.beige,
-                          selectedColor: AppColors.darkBrown,
+                          backgroundColor: Theme.of(context).dividerColor,
+                          selectedColor:
+                              Theme.of(context).colorScheme.onSurface,
                           showCheckmark: false,
                           side: BorderSide.none,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          labelStyle: AppTextStyles.label.copyWith(
-                            color:
-                                active ? AppColors.cream : AppColors.softBrown,
-                            fontSize: 13,
-                          ),
+                          labelStyle: Theme.of(context)
+                              .textTheme
+                              .labelMedium
+                              ?.copyWith(
+                                color: active
+                                    ? Theme.of(context).colorScheme.onTertiary
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                fontSize: 13,
+                              ),
                         );
                       }).toList(),
                     ),
@@ -169,8 +187,10 @@ class _FieldLabel extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Text(text,
-          style: AppTextStyles.labelSmall
-              .copyWith(fontSize: 11, letterSpacing: 0.5)),
+          style: Theme.of(context)
+              .textTheme
+              .labelSmall
+              ?.copyWith(fontSize: 11, letterSpacing: 0.5)),
     );
   }
 }
@@ -186,19 +206,22 @@ class _FieldInput extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.beige, width: 1.5),
+        border: Border.all(color: Theme.of(context).dividerColor, width: 1.5),
       ),
       child: Row(
         children: [
           Expanded(
             child: Text(hint,
-                style:
-                    AppTextStyles.bodyMedium.copyWith(color: AppColors.text)),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.onSurface)),
           ),
           if (suffixIcon != null)
-            Icon(suffixIcon, color: AppColors.textLight, size: 18),
+            Icon(suffixIcon,
+                color: Theme.of(context).colorScheme.outline, size: 18),
         ],
       ),
     );
@@ -217,7 +240,7 @@ class SavedAddressesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.warmWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,10 +251,10 @@ class SavedAddressesScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: onBack,
-                    icon: const Icon(Icons.chevron_left_rounded, size: 24),
+                    icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
-                      backgroundColor: AppColors.beige,
-                      foregroundColor: AppColors.darkBrown,
+                      backgroundColor: Theme.of(context).dividerColor,
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
                       minimumSize: const Size(40, 40),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -239,7 +262,8 @@ class SavedAddressesScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text('Saved Addresses', style: AppTextStyles.headlineLarge),
+                  Text('Saved Addresses',
+                      style: Theme.of(context).textTheme.headlineLarge),
                 ],
               ),
             ),
@@ -250,12 +274,12 @@ class SavedAddressesScreen extends StatelessWidget {
                   ...BakeryData.savedAddresses.map((a) {
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
-                      color: AppColors.white,
+                      color: Theme.of(context).cardColor,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
-                        side: const BorderSide(
-                            color: AppColors.beige, width: 1.5),
+                        side: BorderSide(
+                            color: Theme.of(context).dividerColor, width: 1.5),
                       ),
                       child: ListTile(
                         contentPadding: const EdgeInsets.symmetric(
@@ -264,7 +288,7 @@ class SavedAddressesScreen extends StatelessWidget {
                           width: 48,
                           height: 48,
                           decoration: BoxDecoration(
-                            color: AppColors.beige,
+                            color: Theme.of(context).dividerColor,
                             borderRadius: BorderRadius.circular(16),
                           ),
                           alignment: Alignment.center,
@@ -274,26 +298,41 @@ class SavedAddressesScreen extends StatelessWidget {
                         title: Row(
                           children: [
                             Text(a.label,
-                                style: AppTextStyles.bodyLarge
-                                    .copyWith(fontWeight: FontWeight.w500)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(fontWeight: FontWeight.w500)),
                             const SizedBox(width: 6),
                             Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 7, vertical: 2),
                               decoration: BoxDecoration(
                                 color: a.type == 'Pickup'
-                                    ? AppColors.sage.withValues(alpha: 0.12)
-                                    : AppColors.golden.withValues(alpha: 0.14),
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withValues(alpha: 0.12)
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .secondary
+                                        .withValues(alpha: 0.14),
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
                                 a.type,
-                                style: AppTextStyles.caption.copyWith(
-                                  color: a.type == 'Pickup'
-                                      ? AppColors.sage
-                                      : AppColors.softBrown,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: a.type == 'Pickup'
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .onSurfaceVariant,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                               ),
                             ),
                           ],
@@ -302,12 +341,15 @@ class SavedAddressesScreen extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
                             a.address,
-                            style:
-                                AppTextStyles.bodySmall.copyWith(fontSize: 12),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(fontSize: 12),
                           ),
                         ),
-                        trailing: const Icon(Icons.more_vert_rounded,
-                            color: AppColors.textLight, size: 20),
+                        trailing: Icon(Icons.more_vert_rounded,
+                            color: Theme.of(context).colorScheme.outline,
+                            size: 20),
                       ),
                     );
                   }),
@@ -315,16 +357,20 @@ class SavedAddressesScreen extends StatelessWidget {
                     onPressed: onAddNew,
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.all(16),
-                      side: const BorderSide(color: AppColors.beige, width: 2),
+                      side: BorderSide(
+                          color: Theme.of(context).dividerColor, width: 2),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18),
                       ),
-                      foregroundColor: AppColors.softBrown,
+                      foregroundColor:
+                          Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
-                    icon: const Icon(Icons.add_rounded),
+                    icon: Icon(Icons.add_rounded),
                     label: Text('Add New Address',
-                        style: AppTextStyles.bodyMedium
-                            .copyWith(color: AppColors.softBrown)),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant)),
                   ),
                 ],
               ),
@@ -346,7 +392,7 @@ class PaymentMethodsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.warmWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,10 +403,10 @@ class PaymentMethodsScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: onBack,
-                    icon: const Icon(Icons.chevron_left_rounded, size: 24),
+                    icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
-                      backgroundColor: AppColors.beige,
-                      foregroundColor: AppColors.darkBrown,
+                      backgroundColor: Theme.of(context).dividerColor,
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
                       minimumSize: const Size(40, 40),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -368,7 +414,8 @@ class PaymentMethodsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text('Payment Methods', style: AppTextStyles.headlineLarge),
+                  Text('Payment Methods',
+                      style: Theme.of(context).textTheme.headlineLarge),
                 ],
               ),
             ),
@@ -400,16 +447,20 @@ class PaymentMethodsScreen extends StatelessWidget {
                     onPressed: () {},
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.all(16),
-                      side: const BorderSide(color: AppColors.beige, width: 2),
+                      side: BorderSide(
+                          color: Theme.of(context).dividerColor, width: 2),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18),
                       ),
-                      foregroundColor: AppColors.softBrown,
+                      foregroundColor:
+                          Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
-                    icon: const Icon(Icons.add_rounded),
+                    icon: Icon(Icons.add_rounded),
                     label: Text('Add Payment Method',
-                        style: AppTextStyles.bodyMedium
-                            .copyWith(color: AppColors.softBrown)),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant)),
                   ),
                 ],
               ),
@@ -437,11 +488,11 @@ class _PaymentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
-      color: AppColors.white,
+      color: Theme.of(context).cardColor,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
-        side: const BorderSide(color: AppColors.beige, width: 1.5),
+        side: BorderSide(color: Theme.of(context).dividerColor, width: 1.5),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -449,7 +500,7 @@ class _PaymentCard extends StatelessWidget {
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: AppColors.beige,
+            color: Theme.of(context).dividerColor,
             borderRadius: BorderRadius.circular(16),
           ),
           alignment: Alignment.center,
@@ -458,30 +509,39 @@ class _PaymentCard extends StatelessWidget {
         title: Row(
           children: [
             Text(label,
-                style: AppTextStyles.bodyLarge
-                    .copyWith(fontWeight: FontWeight.w500)),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(fontWeight: FontWeight.w500)),
             if (isDefault) ...[
               const SizedBox(width: 6),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppColors.sage.withValues(alpha: 0.12),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Text('Default',
-                    style: AppTextStyles.caption.copyWith(
-                        color: AppColors.sage, fontWeight: FontWeight.w500)),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w500)),
               ),
             ],
           ],
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 4),
-          child:
-              Text(sub, style: AppTextStyles.bodySmall.copyWith(fontSize: 12)),
+          child: Text(sub,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontSize: 12)),
         ),
-        trailing: const Icon(Icons.more_vert_rounded,
-            color: AppColors.textLight, size: 20),
+        trailing: Icon(Icons.more_vert_rounded,
+            color: Theme.of(context).colorScheme.outline, size: 20),
       ),
     );
   }
@@ -508,7 +568,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.warmWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -519,10 +579,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 children: [
                   IconButton(
                     onPressed: widget.onBack,
-                    icon: const Icon(Icons.chevron_left_rounded, size: 24),
+                    icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
-                      backgroundColor: AppColors.beige,
-                      foregroundColor: AppColors.darkBrown,
+                      backgroundColor: Theme.of(context).dividerColor,
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
                       minimumSize: const Size(40, 40),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -530,7 +590,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text('Notifications', style: AppTextStyles.headlineLarge),
+                  Text('Notifications',
+                      style: Theme.of(context).textTheme.headlineLarge),
                 ],
               ),
             ),
@@ -620,7 +681,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.warmWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -631,10 +692,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   IconButton(
                     onPressed: widget.onBack,
-                    icon: const Icon(Icons.chevron_left_rounded, size: 24),
+                    icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
-                      backgroundColor: AppColors.beige,
-                      foregroundColor: AppColors.darkBrown,
+                      backgroundColor: Theme.of(context).dividerColor,
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
                       minimumSize: const Size(40, 40),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -642,7 +703,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text('Settings', style: AppTextStyles.headlineLarge),
+                  Text('Settings',
+                      style: Theme.of(context).textTheme.headlineLarge),
                 ],
               ),
             ),
@@ -710,21 +772,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: AppColors.beige,
+              color: Theme.of(context).dividerColor,
               borderRadius: BorderRadius.circular(14),
             ),
             alignment: Alignment.center,
             child: Text(icon, style: const TextStyle(fontSize: 18)),
           ),
-          title: Text(label, style: AppTextStyles.bodyLarge),
+          title: Text(label, style: Theme.of(context).textTheme.bodyLarge),
           trailing: valueText != null
               ? Text(valueText,
-                  style: AppTextStyles.bodySmall.copyWith(fontSize: 13))
-              : const Icon(Icons.chevron_right_rounded,
-                  color: AppColors.textLight, size: 20),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontSize: 13))
+              : Icon(Icons.chevron_right_rounded,
+                  color: Theme.of(context).colorScheme.outline, size: 20),
           onTap: () {},
         ),
-        if (showDivider) const Divider(height: 0),
+        if (showDivider) Divider(height: 0),
       ],
     );
   }
@@ -740,7 +805,7 @@ class AddNewAddressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.warmWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -750,10 +815,10 @@ class AddNewAddressScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: onBack,
-                    icon: const Icon(Icons.chevron_left_rounded, size: 24),
+                    icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
-                      backgroundColor: AppColors.beige,
-                      foregroundColor: AppColors.darkBrown,
+                      backgroundColor: Theme.of(context).dividerColor,
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
                       minimumSize: const Size(40, 40),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -761,7 +826,8 @@ class AddNewAddressScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text('New Address', style: AppTextStyles.headlineLarge),
+                  Text('New Address',
+                      style: Theme.of(context).textTheme.headlineLarge),
                 ],
               ),
             ),
@@ -775,7 +841,7 @@ class AddNewAddressScreen extends StatelessWidget {
                     Container(
                       height: 180,
                       decoration: BoxDecoration(
-                        color: AppColors.beige,
+                        color: Theme.of(context).dividerColor,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       alignment: Alignment.center,
@@ -785,24 +851,24 @@ class AddNewAddressScreen extends StatelessWidget {
                           const Text('🗺️', style: TextStyle(fontSize: 40)),
                           const SizedBox(height: 8),
                           Text('Tap to set location',
-                              style: AppTextStyles.bodySmall),
+                              style: Theme.of(context).textTheme.bodySmall),
                         ],
                       ),
                     ),
                     const SizedBox(height: 20),
-                    _buildLbl('LABEL'),
-                    _buildInp(hint: 'e.g. Home, Office'),
+                    _buildLbl(context, 'LABEL'),
+                    _buildInp(context, hint: 'e.g. Home, Office'),
                     const SizedBox(height: 14),
-                    _buildLbl('STREET ADDRESS'),
-                    _buildInp(hint: '123 Baker Street'),
+                    _buildLbl(context, 'STREET ADDRESS'),
+                    _buildInp(context, hint: '123 Baker Street'),
                     const SizedBox(height: 14),
-                    _buildLbl('CITY'),
-                    _buildInp(hint: 'London'),
+                    _buildLbl(context, 'CITY'),
+                    _buildInp(context, hint: 'London'),
                     const SizedBox(height: 14),
-                    _buildLbl('POSTCODE'),
-                    _buildInp(hint: 'W1F 0TH'),
+                    _buildLbl(context, 'POSTCODE'),
+                    _buildInp(context, hint: 'W1F 0TH'),
                     const SizedBox(height: 20),
-                    _buildLbl('ADDRESS TYPE'),
+                    _buildLbl(context, 'ADDRESS TYPE'),
                     const SizedBox(height: 8),
                     Row(
                       children: [
@@ -810,13 +876,19 @@ class AddNewAddressScreen extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
-                              color: AppColors.darkBrown,
+                              color: Theme.of(context).colorScheme.onSurface,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             alignment: Alignment.center,
                             child: Text('🏠 Delivery',
-                                style: AppTextStyles.label.copyWith(
-                                    color: AppColors.cream, fontSize: 13)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onTertiary,
+                                        fontSize: 13)),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -824,13 +896,19 @@ class AddNewAddressScreen extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
-                              color: AppColors.beige,
+                              color: Theme.of(context).dividerColor,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             alignment: Alignment.center,
                             child: Text('🏪 Pickup',
-                                style: AppTextStyles.label.copyWith(
-                                    color: AppColors.softBrown, fontSize: 13)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                        fontSize: 13)),
                           ),
                         ),
                       ],
@@ -849,22 +927,26 @@ class AddNewAddressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLbl(String t) => Padding(
+  Widget _buildLbl(BuildContext context, String t) => Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Text(t,
-          style: AppTextStyles.labelSmall
-              .copyWith(fontSize: 11, letterSpacing: 0.5)));
+          style: Theme.of(context)
+              .textTheme
+              .labelSmall
+              ?.copyWith(fontSize: 11, letterSpacing: 0.5)));
 
-  Widget _buildInp({required String hint}) => Container(
+  Widget _buildInp(BuildContext context, {required String hint}) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.beige, width: 1.5),
+          border: Border.all(color: Theme.of(context).dividerColor, width: 1.5),
         ),
         child: Text(hint,
-            style:
-                AppTextStyles.bodyMedium.copyWith(color: AppColors.textLight)),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Theme.of(context).colorScheme.outline)),
       );
 }
 
@@ -878,8 +960,10 @@ class _SectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        style:
-            AppTextStyles.labelSmall.copyWith(letterSpacing: 1, fontSize: 11));
+        style: Theme.of(context)
+            .textTheme
+            .labelSmall
+            ?.copyWith(letterSpacing: 1, fontSize: 11));
   }
 }
 
@@ -893,9 +977,9 @@ class _ToggleCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.beige),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(children: children),
     );
@@ -929,27 +1013,30 @@ class _ToggleRow extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(vertical: 2),
           value: value,
           onChanged: disabled ? null : onChanged,
-          activeThumbColor: AppColors.white,
-          activeTrackColor: AppColors.sage,
-          inactiveThumbColor: AppColors.white,
-          inactiveTrackColor: AppColors.beige,
-          title: Text(label, style: AppTextStyles.bodyLarge),
+          activeThumbColor: Theme.of(context).cardColor,
+          activeTrackColor: Theme.of(context).colorScheme.primary,
+          inactiveThumbColor: Theme.of(context).cardColor,
+          inactiveTrackColor: Theme.of(context).dividerColor,
+          title: Text(label, style: Theme.of(context).textTheme.bodyLarge),
           subtitle: sub != null
               ? Text(sub!,
-                  style: AppTextStyles.bodySmall.copyWith(fontSize: 12))
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontSize: 12))
               : null,
           secondary: Container(
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: AppColors.beige,
+              color: Theme.of(context).dividerColor,
               borderRadius: BorderRadius.circular(14),
             ),
             alignment: Alignment.center,
             child: Text(icon, style: const TextStyle(fontSize: 18)),
           ),
         ),
-        if (showDivider) const Divider(height: 0),
+        if (showDivider) Divider(height: 0),
       ],
     );
   }
