@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../components/primary_button.dart';
 import '../../data/bakery_data.dart';
+import 'package:go_router/go_router.dart';
 
 // ── Edit Profile ──────────────────────────────────────────────────────────────
 
 class EditProfileScreen extends StatefulWidget {
-  final VoidCallback onBack;
-
-  const EditProfileScreen({super.key, required this.onBack});
+  const EditProfileScreen({super.key});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -29,7 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: widget.onBack,
+                    onPressed: () => context.pop(),
                     icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
                       backgroundColor: Theme.of(context).dividerColor,
@@ -168,7 +167,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-              child: PrimaryButton(label: 'Save Changes', onTap: widget.onBack),
+              child: PrimaryButton(
+                  label: 'Save Changes', onTap: () => context.pop()),
             ),
           ],
         ),
@@ -231,11 +231,7 @@ class _FieldInput extends StatelessWidget {
 // ── Saved Addresses ──────────────────────────────────────────────────────────
 
 class SavedAddressesScreen extends StatelessWidget {
-  final VoidCallback onBack;
-  final VoidCallback onAddNew;
-
-  const SavedAddressesScreen(
-      {super.key, required this.onBack, required this.onAddNew});
+  const SavedAddressesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +246,7 @@ class SavedAddressesScreen extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: onBack,
+                    onPressed: () => context.pop(),
                     icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
                       backgroundColor: Theme.of(context).dividerColor,
@@ -354,7 +350,7 @@ class SavedAddressesScreen extends StatelessWidget {
                     );
                   }),
                   OutlinedButton.icon(
-                    onPressed: onAddNew,
+                    onPressed: () => context.push('/profile/addresses/add'),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.all(16),
                       side: BorderSide(
@@ -385,9 +381,7 @@ class SavedAddressesScreen extends StatelessWidget {
 // ── Payment Methods ──────────────────────────────────────────────────────────
 
 class PaymentMethodsScreen extends StatelessWidget {
-  final VoidCallback onBack;
-
-  const PaymentMethodsScreen({super.key, required this.onBack});
+  const PaymentMethodsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -402,7 +396,7 @@ class PaymentMethodsScreen extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: onBack,
+                    onPressed: () => context.pop(),
                     icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
                       backgroundColor: Theme.of(context).dividerColor,
@@ -550,9 +544,7 @@ class _PaymentCard extends StatelessWidget {
 // ── Notifications ──────────────────────────────────────────────────────────
 
 class NotificationsScreen extends StatefulWidget {
-  final VoidCallback onBack;
-
-  const NotificationsScreen({super.key, required this.onBack});
+  const NotificationsScreen({super.key});
 
   @override
   State<NotificationsScreen> createState() => _NotificationsScreenState();
@@ -578,7 +570,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: widget.onBack,
+                    onPressed: () => context.pop(),
                     icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
                       backgroundColor: Theme.of(context).dividerColor,
@@ -666,9 +658,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 // ── Settings ──────────────────────────────────────────────────────────────────
 
 class SettingsScreen extends StatefulWidget {
-  final VoidCallback onBack;
-
-  const SettingsScreen({super.key, required this.onBack});
+  const SettingsScreen({super.key});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -691,7 +681,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: widget.onBack,
+                    onPressed: () => context.pop(),
                     icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
                       backgroundColor: Theme.of(context).dividerColor,
@@ -798,9 +788,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 // ── Add New Address ──────────────────────────────────────────────────────────
 
 class AddNewAddressScreen extends StatelessWidget {
-  final VoidCallback onBack;
-
-  const AddNewAddressScreen({super.key, required this.onBack});
+  const AddNewAddressScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -814,7 +802,7 @@ class AddNewAddressScreen extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: onBack,
+                    onPressed: () => context.pop(),
                     icon: Icon(Icons.chevron_left_rounded, size: 24),
                     style: IconButton.styleFrom(
                       backgroundColor: Theme.of(context).dividerColor,
@@ -919,7 +907,8 @@ class AddNewAddressScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-              child: PrimaryButton(label: 'Save Address', onTap: onBack),
+              child: PrimaryButton(
+                  label: 'Save Address', onTap: () => context.pop()),
             ),
           ],
         ),

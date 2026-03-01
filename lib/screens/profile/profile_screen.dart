@@ -2,25 +2,10 @@ import 'package:flutter/material.dart';
 import '../../components/loyalty_card.dart';
 import '../../theme/app_theme.dart';
 
-class ProfileScreen extends StatelessWidget {
-  final VoidCallback onEditProfile;
-  final VoidCallback onOrders;
-  final VoidCallback onFavourites;
-  final VoidCallback onAddresses;
-  final VoidCallback onPayments;
-  final VoidCallback onNotifications;
-  final VoidCallback onSettings;
+import 'package:go_router/go_router.dart';
 
-  const ProfileScreen({
-    super.key,
-    required this.onEditProfile,
-    required this.onOrders,
-    required this.onFavourites,
-    required this.onAddresses,
-    required this.onPayments,
-    required this.onNotifications,
-    required this.onSettings,
-  });
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +18,7 @@ class ProfileScreen extends StatelessWidget {
 
           // Profile card
           GestureDetector(
-            onTap: onEditProfile,
+            onTap: () => context.push('/profile/edit'),
             child: Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
@@ -119,44 +104,44 @@ class ProfileScreen extends StatelessWidget {
           const SizedBox(height: 24),
 
           // Menu sections
-          _SectionHeader(label: 'ORDERS & HISTORY'),
+          const _SectionHeader(label: 'ORDERS & HISTORY'),
           const SizedBox(height: 8),
           _MenuTile(
               icon: '📦',
               label: 'My Orders',
               sub: '4 recent orders',
-              onTap: onOrders),
+              onTap: () => context.push('/profile/orders')),
           _MenuTile(
               icon: '❤️',
               label: 'Favourites',
               sub: 'Saved items',
-              onTap: onFavourites),
+              onTap: () => context.push('/profile/favourites')),
           const SizedBox(height: 16),
-          _SectionHeader(label: 'ACCOUNT'),
+          const _SectionHeader(label: 'ACCOUNT'),
           const SizedBox(height: 8),
           _MenuTile(
               icon: '📍',
               label: 'Saved Addresses',
               sub: 'Manage delivery locations',
-              onTap: onAddresses),
+              onTap: () => context.push('/profile/addresses')),
           _MenuTile(
               icon: '💳',
               label: 'Payment Methods',
               sub: 'Cards & digital wallets',
-              onTap: onPayments),
+              onTap: () => context.push('/profile/payments')),
           const SizedBox(height: 16),
-          _SectionHeader(label: 'PREFERENCES'),
+          const _SectionHeader(label: 'PREFERENCES'),
           const SizedBox(height: 8),
           _MenuTile(
               icon: '🔔',
               label: 'Notifications',
               sub: 'Push & email settings',
-              onTap: onNotifications),
+              onTap: () => context.push('/profile/notifications')),
           _MenuTile(
               icon: '⚙️',
               label: 'Settings',
               sub: 'App preferences',
-              onTap: onSettings),
+              onTap: () => context.push('/profile/settings')),
           const SizedBox(height: 20),
 
           // Sign out

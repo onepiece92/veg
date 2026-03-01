@@ -4,16 +4,10 @@ import '../../models/address.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/address_provider.dart';
 import '../../components/primary_button.dart';
+import 'package:go_router/go_router.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  final VoidCallback onBack;
-  final VoidCallback onPlaceOrder;
-
-  const CheckoutScreen({
-    super.key,
-    required this.onBack,
-    required this.onPlaceOrder,
-  });
+  const CheckoutScreen({super.key});
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
@@ -44,7 +38,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           padding: const EdgeInsets.only(left: 8.0),
           child: IconButton(
             icon: const Icon(Icons.chevron_left_rounded, size: 24),
-            onPressed: widget.onBack,
+            onPressed: () => context.pop(),
           ),
         ),
         title: const Text('Checkout'),
@@ -109,7 +103,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   if (_step < 3) {
                     setState(() => _step++);
                   } else {
-                    widget.onPlaceOrder();
+                    context.go('/cart/checkout/success');
                   }
                 },
               ),

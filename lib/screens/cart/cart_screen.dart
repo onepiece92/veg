@@ -3,22 +3,14 @@ import 'package:provider/provider.dart';
 import '../../theme/app_theme.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/address_provider.dart';
-import '../../models/product.dart';
 import '../../data/bakery_data.dart';
 import '../../components/address_selector.dart';
 import '../../components/primary_button.dart';
 
-class CartScreen extends StatelessWidget {
-  final VoidCallback onBack;
-  final VoidCallback onCheckout;
-  final ValueChanged<Product> onQuickAdd;
+import 'package:go_router/go_router.dart';
 
-  const CartScreen({
-    super.key,
-    required this.onBack,
-    required this.onCheckout,
-    required this.onQuickAdd,
-  });
+class CartScreen extends StatelessWidget {
+  const CartScreen({super.key});
 
   void _showAddressSheet(BuildContext context) {
     showModalBottomSheet(
@@ -50,7 +42,7 @@ class CartScreen extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8.0),
           child: IconButton(
             icon: const Icon(Icons.chevron_left_rounded, size: 24),
-            onPressed: onBack,
+            onPressed: () => context.pop(),
           ),
         ),
         title: const Text('Your Cart'),
@@ -74,7 +66,7 @@ class CartScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: cart.items.isEmpty
-                      ? _EmptyCart(onBack: onBack)
+                      ? _EmptyCart(onBack: () => context.pop())
                       : ListView(
                           padding: const EdgeInsets.fromLTRB(24, 0, 24, 150),
                           children: [
@@ -119,7 +111,11 @@ class CartScreen extends StatelessWidget {
                                   itemBuilder: (_, i) {
                                     final p = suggestions[i];
                                     return GestureDetector(
-                                      onTap: () => onQuickAdd(p),
+                                      onTap: () {
+                                        context
+                                            .read<CartProvider>()
+                                            .addProduct(p);
+                                      },
                                       child: Card(
                                         child: Padding(
                                           padding: const EdgeInsets.all(10),
@@ -272,7 +268,11 @@ class CartScreen extends StatelessWidget {
                 right: 0,
                 child: PrimaryButton(
                   label: 'Checkout — \$${cart.total.toStringAsFixed(2)}',
-                  onTap: onCheckout,
+                  onTap: () {
+                    if (cart.items.isNotEmpty) {
+                      context.push('/cart/checkout');
+                    }
+                  },
                 ),
               ),
           ],

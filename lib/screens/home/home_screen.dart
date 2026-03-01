@@ -10,16 +10,10 @@ import '../../components/product_card.dart';
 import '../../components/grid_product_card.dart';
 import '../../components/address_selector.dart';
 import '../../components/order_card.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
-  final ValueChanged<Product> onProductTap;
-  final VoidCallback onOrdersTab;
-
-  const HomeScreen({
-    super.key,
-    required this.onProductTap,
-    required this.onOrdersTab,
-  });
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -302,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen>
                       Text('Recent Orders',
                           style: Theme.of(context).textTheme.headlineSmall),
                       GestureDetector(
-                        onTap: widget.onOrdersTab,
+                        onTap: () => context.push('/home/recent_orders'),
                         child: Text('View all →',
                             style: Theme.of(context)
                                 .textTheme
@@ -324,13 +318,14 @@ class _HomeScreenState extends State<HomeScreen>
                       itemCount: BakeryData.recentOrders.length.clamp(0, 3),
                       separatorBuilder: (_, __) => const SizedBox(width: 12),
                       itemBuilder: (_, i) => GestureDetector(
-                        onTap: widget.onOrdersTab,
+                        onTap: () => context.push('/home/recent_orders'),
                         child: SizedBox(
                           width: 200,
                           child: OrderCard(
                             order: BakeryData.recentOrders[i],
                             featured: i == 0,
-                            onReorder: () => widget.onOrdersTab(),
+                            onReorder: () =>
+                                context.push('/home/recent_orders'),
                           ),
                         ),
                       ),
@@ -399,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen>
                       final p = filtered[i];
                       return GridProductCard(
                         product: p,
-                        onTap: () => widget.onProductTap(p),
+                        onTap: () => context.push('/home/product', extra: p),
                         onQuickAdd: () => _quickAdd(p),
                         isFavourite: favProv.isFavourite(p.id),
                         onToggleFavourite: () => favProv.toggle(p.id),
@@ -416,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen>
                       final p = filtered[i];
                       return ProductCard(
                         product: p,
-                        onTap: () => widget.onProductTap(p),
+                        onTap: () => context.push('/home/product', extra: p),
                         onQuickAdd: () => _quickAdd(p),
                         isFavourite: favProv.isFavourite(p.id),
                         onToggleFavourite: () => favProv.toggle(p.id),
@@ -517,7 +512,7 @@ class _SortButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isActive = sortBy != 'default';
-    return TextButton.icon(
+    return TextButton(
       onPressed: () {
         showModalBottomSheet(
           context: context,
@@ -563,12 +558,9 @@ class _SortButton extends StatelessWidget {
       },
       statesController:
           WidgetStatesController({if (isActive) WidgetState.selected}),
-      icon: const Icon(Icons.sort_rounded, size: 14),
-      label: Text(
-        isActive
-            ? _options.firstWhere((o) => o.$1 == sortBy).$2.split(':').first
-            : 'Sort',
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(fontSize: 12),
+      child: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 4.0),
+        child: Icon(Icons.sort_rounded, size: 20),
       ),
     );
   }

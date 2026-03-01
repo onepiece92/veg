@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../data/bakery_data.dart';
-import '../../models/order.dart';
+import 'package:go_router/go_router.dart';
 
 class RecentOrdersScreen extends StatefulWidget {
-  final VoidCallback onBack;
-  final ValueChanged<Order>? onReorder;
-
-  const RecentOrdersScreen({super.key, required this.onBack, this.onReorder});
+  const RecentOrdersScreen({super.key});
 
   @override
   State<RecentOrdersScreen> createState() => _RecentOrdersScreenState();
@@ -68,7 +65,7 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
           padding: const EdgeInsets.only(left: 8.0),
           child: IconButton(
             icon: const Icon(Icons.chevron_left_rounded, size: 24),
-            onPressed: widget.onBack,
+            onPressed: () => context.pop(),
           ),
         ),
         title: const Text('Recent Orders'),
@@ -200,9 +197,7 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
                               padding: const EdgeInsets.only(bottom: 12),
                               child: _OrderCard(
                                 order: order,
-                                onReorder: widget.onReorder != null
-                                    ? () => widget.onReorder!(order)
-                                    : null,
+                                onReorder: () => context.go('/home'),
                               ),
                             ),
                           ),

@@ -4,13 +4,11 @@ import 'package:provider/provider.dart';
 import '../../data/bakery_data.dart';
 import '../../providers/favourites_provider.dart';
 import '../../providers/cart_provider.dart';
-import '../../models/product.dart';
 import '../../components/grid_product_card.dart';
+import 'package:go_router/go_router.dart';
 
 class FavouritesScreen extends StatelessWidget {
-  final ValueChanged<Product> onProductTap;
-
-  const FavouritesScreen({super.key, required this.onProductTap});
+  const FavouritesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +51,8 @@ class FavouritesScreen extends StatelessWidget {
                       final p = favs[i];
                       return GridProductCard(
                         product: p,
-                        onTap: () => onProductTap(p),
+                        onTap: () =>
+                            context.push('/favourites/product', extra: p),
                         onQuickAdd: () => cart.addProduct(p),
                         isFavourite: favProv.isFavourite(p.id),
                         onToggleFavourite: () => favProv.toggle(p.id),

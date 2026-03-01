@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../components/primary_button.dart';
+import 'package:go_router/go_router.dart';
 
 class OrderSuccessScreen extends StatefulWidget {
-  final VoidCallback onContinueShopping;
-  final VoidCallback onTrackOrder;
-
-  const OrderSuccessScreen({
-    super.key,
-    required this.onContinueShopping,
-    required this.onTrackOrder,
-  });
+  const OrderSuccessScreen({super.key});
 
   @override
   State<OrderSuccessScreen> createState() => _OrderSuccessScreenState();
@@ -221,11 +215,11 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
               const Spacer(),
               PrimaryButton(
                 label: 'Track My Order',
-                onTap: widget.onTrackOrder,
+                onTap: () => context.go('/orders'),
               ),
               const SizedBox(height: 12),
               GestureDetector(
-                onTap: widget.onContinueShopping,
+                onTap: () => context.go('/home'),
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 14),
