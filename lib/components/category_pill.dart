@@ -27,9 +27,7 @@ class CategoryPill extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-```dart
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
-```
           decoration: BoxDecoration(
             color: active ? colorScheme.primary : theme.cardColor,
             borderRadius: BorderRadius.circular(50),
