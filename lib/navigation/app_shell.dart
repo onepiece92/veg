@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../components/bottom_nav_bar.dart';
+import '../providers/nav_provider.dart';
 
 /// Root app shell — manages bottom nav and screen stack via GoRouter.
 class AppShell extends StatelessWidget {
@@ -13,22 +15,25 @@ class AppShell extends StatelessWidget {
     required this.navigationShell,
   });
 
-  void _onNavTap(int index) {
-    HapticFeedback.selectionClick();
-    navigationShell.goBranch(
-      index,
-      initialLocation: index == navigationShell.currentIndex,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    void onNavTap(int index) {
+      HapticFeedback.selectionClick();
+      if (index == 0 && index == navigationShell.currentIndex) {
+        context.read<NavProvider>().triggerHomeTap();
+      }
+      navigationShell.goBranch(
+        index,
+        initialLocation: index == navigationShell.currentIndex,
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.warmWhite,
       body: navigationShell,
       bottomNavigationBar: AppBottomNavBar(
         currentIndex: navigationShell.currentIndex,
-        onTap: _onNavTap,
+        onTap: onNavTap,
       ),
     );
   }

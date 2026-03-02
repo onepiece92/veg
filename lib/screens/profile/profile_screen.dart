@@ -3,6 +3,7 @@ import '../../components/loyalty_card.dart';
 import '../../theme/app_theme.dart';
 
 import 'package:go_router/go_router.dart';
+import '../../components/service_icon.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -158,15 +159,10 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Container(
-                    width: 42,
-                    height: 42,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.errorContainer,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    alignment: Alignment.center,
-                    child: const Text('👋', style: TextStyle(fontSize: 18)),
+                  ServiceIcon(
+                    icon: '👋',
+                    backgroundColor:
+                        Theme.of(context).colorScheme.errorContainer,
                   ),
                   const SizedBox(width: 14),
                   Text('Sign Out',
@@ -215,15 +211,9 @@ class _MenuTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
           children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: Theme.of(context).dividerColor,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              alignment: Alignment.center,
-              child: Text(icon, style: const TextStyle(fontSize: 18)),
+            ServiceIcon(
+              icon: icon,
+              size: 44,
             ),
             const SizedBox(width: 14),
             Expanded(

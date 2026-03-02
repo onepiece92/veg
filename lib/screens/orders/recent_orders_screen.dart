@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../data/bakery_data.dart';
+import '../../components/reorder_card.dart';
+import '../../providers/cart_provider.dart';
+import '../../components/bakery_back_button.dart';
 import 'package:go_router/go_router.dart';
 
 class RecentOrdersScreen extends StatefulWidget {
@@ -61,12 +65,9 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: IconButton(
-            icon: const Icon(Icons.chevron_left_rounded, size: 24),
-            onPressed: () => context.pop(),
-          ),
+        leading: const Padding(
+          padding: EdgeInsets.only(left: 8.0),
+          child: BakeryBackButton(),
         ),
         title: const Text('Recent Orders'),
       ),
@@ -195,9 +196,13 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
                                 parent: ctrl, curve: Curves.easeOut)),
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 12),
-                              child: _OrderCard(
+                              child: OrderCard(
                                 order: order,
-                                onReorder: () => context.go('/home'),
+                                featured: false,
+                                onReorder: () {
+                                  context.read<CartProvider>().reorder(order);
+                                  context.push('/cart');
+                                },
                               ),
                             ),
                           ),
@@ -206,135 +211,6 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
                     ],
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ── Individual order card matching JSX exactly ────────────────────────────────
-
-class _OrderCard extends StatelessWidget {
-  final dynamic order;
-  final VoidCallback? onReorder;
-
-  const _OrderCard({required this.order, this.onReorder});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Order header — id, date, status badge
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Order ${order.id}',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      order.date,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(fontSize: 12),
-                    ),
-                  ],
-                ),
-                Chip(
-                  label: Text('✓ ${order.status}'),
-                  backgroundColor:
-                      Theme.of(context).colorScheme.secondaryContainer,
-                  labelStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSecondaryContainer,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  side: BorderSide.none,
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-
-            // Item list
-            ...order.items.map<Widget>((item) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      item.name,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 14),
-                    ),
-                    Text(
-                      '× ${item.qty}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(fontSize: 13, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              );
-            }),
-
-            const SizedBox(height: 14),
-
-            // Footer — total + reorder button
-            Container(
-              padding: const EdgeInsets.only(top: 12),
-              decoration: BoxDecoration(
-                border: Border(
-                    top: BorderSide(color: Theme.of(context).dividerColor)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '\$${order.total.toStringAsFixed(2)}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium
-                        ?.copyWith(fontSize: 17),
-                  ),
-                  OutlinedButton(
-                    onPressed: onReorder,
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18, vertical: 8),
-                      side: BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 1.5),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: Text(
-                      'Reorder',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13),
-                    ),
-                  ),
-                ],
               ),
             ),
           ],

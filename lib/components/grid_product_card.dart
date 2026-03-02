@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
@@ -61,7 +59,8 @@ class GridProductCard extends StatelessWidget {
                       width: 28,
                       height: 28,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.85),
+                        color:
+                            Colors.white.withAlpha(217), // 0.85 * 255 = 216.75
                         borderRadius: BorderRadius.circular(9),
                       ),
                       alignment: Alignment.center,
@@ -70,8 +69,8 @@ class GridProductCard extends StatelessWidget {
                             ? Icons.favorite_rounded
                             : Icons.favorite_border_rounded,
                         color: isFavourite
-                            ? AppColors.terracotta
-                            : AppColors.softBrown,
+                            ? const Color(0xFFE07A5F) // AppColors.terracotta
+                            : const Color(0xFF816D62), // AppColors.softBrown
                         size: 15,
                       ),
                     ),
@@ -88,19 +87,27 @@ class GridProductCard extends StatelessWidget {
                 children: [
                   Text(
                     product.name,
-                    style: AppTextStyles.bodyMedium
-                        .copyWith(color: AppColors.darkBrown, fontSize: 14),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 14),
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
-                  Text(product.time, style: AppTextStyles.labelSmall),
+                  Text(product.time,
+                      style: Theme.of(context).textTheme.labelSmall),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Text(
-                        '\$${product.price.toStringAsFixed(2)}',
-                        style: AppTextStyles.price.copyWith(fontSize: 16),
+                      Flexible(
+                        child: Text(
+                          '\$${product.price.toStringAsFixed(2)}',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontSize:
+                                  16), // Assuming price style maps to titleMedium
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
+                      const SizedBox(width: 4),
                       const Spacer(),
                       _GridAddCounter(
                         qty: qty,
@@ -142,7 +149,7 @@ class _GridAddCounter extends StatelessWidget {
       height: 28,
       width: hasItems ? 80 : 28,
       decoration: BoxDecoration(
-        color: AppColors.darkBrown,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(10),
       ),
       clipBehavior: Clip.hardEdge,
@@ -155,8 +162,9 @@ class _GridAddCounter extends StatelessWidget {
                     onTap: () => context
                         .read<CartProvider>()
                         .updateById(productId, qty - 1),
-                    child: const Icon(Icons.remove_rounded,
-                        color: AppColors.cream, size: 12),
+                    child: Icon(Icons.remove_rounded,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: 12),
                   ),
                 ),
                 // Animated count
@@ -167,27 +175,28 @@ class _GridAddCounter extends StatelessWidget {
                   child: Text(
                     '$qty',
                     key: ValueKey(qty),
-                    style: AppTextStyles.label.copyWith(
-                      color: AppColors.cream,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
-                    ),
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                        ),
                   ),
                 ),
                 // + increment
                 Expanded(
                   child: GestureDetector(
                     onTap: onAdd,
-                    child: const Icon(Icons.add_rounded,
-                        color: AppColors.cream, size: 12),
+                    child: Icon(Icons.add_rounded,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: 12),
                   ),
                 ),
               ],
             )
           : GestureDetector(
               onTap: onAdd,
-              child: const Icon(Icons.add_rounded,
-                  color: AppColors.cream, size: 16),
+              child: Icon(Icons.add_rounded,
+                  color: Theme.of(context).colorScheme.onPrimary, size: 16),
             ),
     );
   }

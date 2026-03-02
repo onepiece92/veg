@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
 import '../../theme/app_theme.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/address_provider.dart';
 import '../../data/bakery_data.dart';
 import '../../components/address_selector.dart';
 import '../../components/primary_button.dart';
+import '../../components/product_card.dart';
+import '../../components/grid_product_card.dart';
+import '../../components/bakery_back_button.dart';
+import '../../providers/favourites_provider.dart';
 
 import 'package:go_router/go_router.dart';
 
@@ -28,6 +33,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cart = context.watch<CartProvider>();
     final addrProv = context.watch<AddressProvider>();
+    final favProv = context.watch<FavouritesProvider>();
 
     final cartIds = cart.items.map((i) => i.product.id).toSet();
     final suggestions = BakeryData.products
@@ -38,12 +44,9 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: IconButton(
-            icon: const Icon(Icons.chevron_left_rounded, size: 24),
-            onPressed: () => context.pop(),
-          ),
+        leading: const Padding(
+          padding: EdgeInsets.only(left: 8.0),
+          child: BakeryBackButton(),
         ),
         title: const Text('Your Cart'),
         actions: [
@@ -102,94 +105,28 @@ class CartScreen extends StatelessWidget {
                                       .headlineSmall),
                               const SizedBox(height: 10),
                               SizedBox(
-                                height: 140,
+                                height: 260,
                                 child: ListView.separated(
                                   scrollDirection: Axis.horizontal,
+                                  physics: const BouncingScrollPhysics(),
                                   itemCount: suggestions.length,
                                   separatorBuilder: (_, __) =>
                                       const SizedBox(width: 10),
                                   itemBuilder: (_, i) {
                                     final p = suggestions[i];
-                                    return GestureDetector(
-                                      onTap: () {
-                                        context
+                                    return SizedBox(
+                                      width: 160,
+                                      child: GridProductCard(
+                                        product: p,
+                                        onTap: () => context
+                                            .push('/home/product', extra: p),
+                                        onQuickAdd: () => context
                                             .read<CartProvider>()
-                                            .addProduct(p);
-                                      },
-                                      child: Card(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                height: 56,
-                                                decoration: BoxDecoration(
-                                                    gradient: Theme.of(context)
-                                                        .extension<
-                                                            AppThemeExtension>()
-                                                        ?.productImageGradient,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                alignment: Alignment.center,
-                                                child: Text(p.image,
-                                                    style: const TextStyle(
-                                                        fontSize: 28)),
-                                              ),
-                                              const SizedBox(height: 8),
-                                              Text(p.name,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall
-                                                      ?.copyWith(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .primary,
-                                                          fontSize: 12),
-                                                  overflow:
-                                                      TextOverflow.ellipsis),
-                                              const SizedBox(height: 4),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                      '\$${p.price.toStringAsFixed(2)}',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .labelSmall
-                                                          ?.copyWith(
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .colorScheme
-                                                                  .primary,
-                                                              fontSize: 13)),
-                                                  const SizedBox(width: 6),
-                                                  Container(
-                                                    width: 22,
-                                                    height: 22,
-                                                    decoration: BoxDecoration(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .primary,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              7),
-                                                    ),
-                                                    alignment: Alignment.center,
-                                                    child: Icon(
-                                                        Icons.add_rounded,
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .onPrimary,
-                                                        size: 14),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                            .addProduct(p),
+                                        isFavourite: favProv.isFavourite(p.id),
+                                        onToggleFavourite: () => context
+                                            .read<FavouritesProvider>()
+                                            .toggle(p.id),
                                       ),
                                     );
                                   },
@@ -324,6 +261,7 @@ class _CartItemRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: Text(item.name,
@@ -333,40 +271,38 @@ class _CartItemRow extends StatelessWidget {
                                 ?.copyWith(
                                     color:
                                         Theme.of(context).colorScheme.primary,
-                                    fontWeight: FontWeight.w400)),
+                                    fontWeight: FontWeight.w500)),
                       ),
                       GestureDetector(
                         onTap: onRemove,
-                        child: Icon(Icons.delete_outline_rounded,
-                            color: Theme.of(context).textTheme.bodySmall?.color,
-                            size: 18),
+                        child: Icon(Icons.close_rounded,
+                            color: Theme.of(context).dividerColor, size: 20),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
-                  Text('\$${total.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 16)),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
-                      _SmallQtyBtn(
-                          icon: Icons.remove_rounded, onTap: onDecrement),
-                      const SizedBox(width: 12),
-                      Text('$quantity',
+                      Flexible(
+                        child: Text(
+                          '\$${total.toStringAsFixed(2)}',
                           style: Theme.of(context)
                               .textTheme
-                              .bodyMedium
+                              .bodyLarge
                               ?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color:
-                                      Theme.of(context).colorScheme.primary)),
-                      const SizedBox(width: 12),
-                      _SmallQtyBtn(
-                          icon: Icons.add_rounded,
-                          onTap: onIncrement,
-                          filled: true),
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 15,
+                              ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Spacer(),
+                      AddCounter(
+                        qty: quantity,
+                        productId: item.id,
+                        onAdd: onIncrement,
+                      ),
                     ],
                   ),
                 ],
@@ -374,40 +310,6 @@ class _CartItemRow extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _SmallQtyBtn extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-  final bool filled;
-
-  const _SmallQtyBtn(
-      {required this.icon, required this.onTap, this.filled = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 28,
-        height: 28,
-        decoration: BoxDecoration(
-          color: filled
-              ? Theme.of(context).colorScheme.primary
-              : Colors.transparent,
-          border:
-              filled ? null : Border.all(color: Theme.of(context).dividerColor),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        alignment: Alignment.center,
-        child: Icon(icon,
-            color: filled
-                ? Theme.of(context).colorScheme.onPrimary
-                : Theme.of(context).colorScheme.primary,
-            size: 14),
       ),
     );
   }
@@ -449,7 +351,10 @@ class _EmptyCart extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('🧺', style: TextStyle(fontSize: 64)),
+          Flexible(
+            child: Lottie.asset('assets/animations/empty_cart.json',
+                width: 250, repeat: false, fit: BoxFit.contain),
+          ),
           const SizedBox(height: 16),
           Text('Your cart is empty',
               style: Theme.of(context).textTheme.headlineMedium),
@@ -457,8 +362,10 @@ class _EmptyCart extends StatelessWidget {
           Text("Looks like you haven't added anything yet",
               style: Theme.of(context).textTheme.bodySmall,
               textAlign: TextAlign.center),
-          const SizedBox(height: 24),
-          PrimaryButton(label: 'Browse Menu', onTap: onBack),
+          PrimaryButton(
+            label: 'Browse Menu',
+            onTap: () => context.go('/home'),
+          ),
         ],
       ),
     );

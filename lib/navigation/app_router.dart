@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import '../models/product.dart';
 import 'app_shell.dart';
 import '../screens/home/home_screen.dart';
@@ -26,6 +27,36 @@ final GlobalKey<NavigatorState> _profileNavigatorKey =
 final router = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/home',
+  errorBuilder: (context, state) => Scaffold(
+    appBar: AppBar(title: const Text('Page Not Found')),
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible(
+            child: Lottie.asset('assets/animations/error_404.json',
+                width: 250, fit: BoxFit.contain),
+          ),
+          const SizedBox(height: 16),
+          Text('Something went wrong',
+              style: Theme.of(context).textTheme.headlineMedium),
+          const SizedBox(height: 8),
+          Text("We couldn't find the page you're looking for.",
+              style: Theme.of(context).textTheme.bodyMedium),
+          const SizedBox(height: 24),
+          OutlinedButton(
+            onPressed: () {
+              while (context.canPop()) {
+                context.pop();
+              }
+              context.go('/home');
+            },
+            child: const Text('Return to Home'),
+          ),
+        ],
+      ),
+    ),
+  ),
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
@@ -134,8 +165,12 @@ final router = GoRouter(
                   builder: (context, state) => const SettingsScreen(),
                 ),
                 GoRoute(
-                  path: 'recent_orders',
+                  path: 'orders',
                   builder: (context, state) => const RecentOrdersScreen(),
+                ),
+                GoRoute(
+                  path: 'favourites',
+                  builder: (context, state) => const FavouritesScreen(),
                 ),
               ],
             ),

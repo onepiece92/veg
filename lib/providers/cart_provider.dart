@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import '../models/cart_item.dart';
 import '../models/product.dart';
+import '../models/order.dart';
+import '../data/bakery_data.dart';
 
 /// Manages shopping cart state.
 class CartProvider extends ChangeNotifier {
@@ -57,5 +59,21 @@ class CartProvider extends ChangeNotifier {
   void clear() {
     _items.clear();
     notifyListeners();
+  }
+
+  /// Finds items from a past order in the global BakeryData menu
+  /// and adds them directly to the current cart.
+  void reorder(Order pastOrder) {
+    for (final orderItem in pastOrder.items) {
+      try {
+        final product = BakeryData.products.firstWhere(
+          (p) => p.name == orderItem.name,
+        );
+        addProduct(product, quantity: orderItem.qty);
+      } catch (e) {
+        // If a product was removed from the menu, skip it
+        debugPrint('Product from old order no longer found: ${orderItem.name}');
+      }
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../components/primary_button.dart';
+import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 
 class OrderSuccessScreen extends StatefulWidget {
@@ -16,13 +17,15 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
   late Animation<double> _scaleAnim;
   late Animation<double> _fadeAnim;
 
-  static const _steps = [
+  // Made non-const to allow DateTime.now() evaluation
+  late final List<({String desc, String icon, String label})> _steps = [
     (icon: '✅', label: 'Order Confirmed', desc: 'We have received your order'),
     (icon: '👩‍🍳', label: 'Preparing', desc: 'Our bakers are at work'),
     (
       icon: '🎁',
       label: 'Ready for Pickup',
-      desc: 'Your order will be ready at 11:00 AM'
+      desc:
+          'Your order will be ready at ${DateFormat('h:mm a').format(DateTime.now().add(const Duration(minutes: 25)))}'
     ),
   ];
 
@@ -215,7 +218,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
               const Spacer(),
               PrimaryButton(
                 label: 'Track My Order',
-                onTap: () => context.go('/orders'),
+                onTap: () => context.go('/profile/orders'),
               ),
               const SizedBox(height: 12),
               GestureDetector(

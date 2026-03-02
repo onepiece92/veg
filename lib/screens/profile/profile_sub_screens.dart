@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../components/primary_button.dart';
 import '../../data/bakery_data.dart';
 import 'package:go_router/go_router.dart';
+import '../../components/bakery_back_button.dart';
+import '../../components/service_icon.dart';
 
 // ── Edit Profile ──────────────────────────────────────────────────────────────
 
@@ -27,18 +29,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () => context.pop(),
-                    icon: Icon(Icons.chevron_left_rounded, size: 24),
-                    style: IconButton.styleFrom(
-                      backgroundColor: Theme.of(context).dividerColor,
-                      foregroundColor: Theme.of(context).colorScheme.onSurface,
-                      minimumSize: const Size(40, 40),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
+                  const BakeryBackButton(),
                   const SizedBox(width: 12),
                   Text('Edit Profile',
                       style: Theme.of(context).textTheme.headlineLarge),
@@ -245,18 +236,7 @@ class SavedAddressesScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () => context.pop(),
-                    icon: Icon(Icons.chevron_left_rounded, size: 24),
-                    style: IconButton.styleFrom(
-                      backgroundColor: Theme.of(context).dividerColor,
-                      foregroundColor: Theme.of(context).colorScheme.onSurface,
-                      minimumSize: const Size(40, 40),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
+                  const BakeryBackButton(),
                   const SizedBox(width: 12),
                   Text('Saved Addresses',
                       style: Theme.of(context).textTheme.headlineLarge),
@@ -490,15 +470,11 @@ class _PaymentCard extends StatelessWidget {
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: Theme.of(context).dividerColor,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          alignment: Alignment.center,
-          child: Text(icon, style: const TextStyle(fontSize: 22)),
+        leading: ServiceIcon(
+          icon: icon,
+          size: 48,
+          iconSize: 22,
+          borderRadius: 16,
         ),
         title: Row(
           children: [
@@ -551,12 +527,6 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  bool _orderUpdates = true;
-  bool _promotions = true;
-  bool _newItems = false;
-  bool _emailNotifs = true;
-  bool _smsNotifs = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -569,18 +539,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () => context.pop(),
-                    icon: Icon(Icons.chevron_left_rounded, size: 24),
-                    style: IconButton.styleFrom(
-                      backgroundColor: Theme.of(context).dividerColor,
-                      foregroundColor: Theme.of(context).colorScheme.onSurface,
-                      minimumSize: const Size(40, 40),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
+                  const BakeryBackButton(),
                   const SizedBox(width: 12),
                   Text('Notifications',
                       style: Theme.of(context).textTheme.headlineLarge),
@@ -589,49 +548,56 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                 children: [
-                  _SectionLabel('PUSH NOTIFICATIONS'),
+                  _SectionLabel('TODAY'),
                   const SizedBox(height: 8),
-                  _ToggleCard(children: [
-                    _buildToggle(
-                        '🔔',
-                        'Order Updates',
-                        'Status updates for your orders',
-                        _orderUpdates,
-                        (v) => setState(() => _orderUpdates = v)),
-                    _buildToggle(
-                        '🎁',
-                        'Promotions',
-                        'Special offers and discounts',
-                        _promotions,
-                        (v) => setState(() => _promotions = v)),
-                    _buildToggle(
-                        '✨',
-                        'New Items',
-                        'Be first to know about new bakes',
-                        _newItems,
-                        (v) => setState(() => _newItems = v),
-                        showDivider: false),
-                  ]),
-                  const SizedBox(height: 16),
-                  _SectionLabel('OTHER CHANNELS'),
+                  _buildNotificationCard(
+                    context,
+                    icon: Icons.shopping_bag_rounded,
+                    iconColor: Theme.of(context).colorScheme.primary,
+                    title: 'Order Ready for Pickup',
+                    message:
+                        'Your order #BAK-1942 is freshly baked and ready to be picked up at the store.',
+                    time: '10m ago',
+                    isUnread: true,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildNotificationCard(
+                    context,
+                    icon: Icons.cake_rounded,
+                    iconColor: Theme.of(context).colorScheme.tertiary,
+                    title: 'New Seasonal Item',
+                    message:
+                        'Our signature Strawberry Shortcake is back for a limited time! 🍓',
+                    time: '2h ago',
+                    isUnread: true,
+                  ),
+                  const SizedBox(height: 24),
+                  _SectionLabel('THIS WEEK'),
                   const SizedBox(height: 8),
-                  _ToggleCard(children: [
-                    _buildToggle(
-                        '📧',
-                        'Email Notifications',
-                        'Receive updates via email',
-                        _emailNotifs,
-                        (v) => setState(() => _emailNotifs = v)),
-                    _buildToggle(
-                        '💬',
-                        'SMS Notifications',
-                        'Receive updates via SMS',
-                        _smsNotifs,
-                        (v) => setState(() => _smsNotifs = v),
-                        showDivider: false),
-                  ]),
+                  _buildNotificationCard(
+                    context,
+                    icon: Icons.stars_rounded,
+                    iconColor: Colors.amber.shade700,
+                    title: 'Points Earned!',
+                    message:
+                        'You earned 50 loyalty points from your last order. You now have 320 points.',
+                    time: '1d ago',
+                    isUnread: false,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildNotificationCard(
+                    context,
+                    icon: Icons.local_offer_rounded,
+                    iconColor: Theme.of(context).colorScheme.secondary,
+                    title: 'Weekend Promo',
+                    message:
+                        'Get 20% off all whole cakes this weekend. Use code SWEET20 at checkout.',
+                    time: '3d ago',
+                    isUnread: false,
+                  ),
                 ],
               ),
             ),
@@ -641,16 +607,99 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
-  Widget _buildToggle(String icon, String label, String sub, bool value,
-      ValueChanged<bool> onChanged,
-      {bool showDivider = true}) {
-    return _ToggleRow(
-      icon: icon,
-      label: label,
-      sub: sub,
-      value: value,
-      onChanged: onChanged,
-      showDivider: showDivider,
+  Widget _buildNotificationCard(
+    BuildContext context, {
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String message,
+    required String time,
+    required bool isUnread,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isUnread
+              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)
+              : Theme.of(context).dividerColor,
+          width: isUnread ? 1.5 : 1,
+        ),
+        boxShadow: [
+          if (isUnread)
+            BoxShadow(
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            )
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: iconColor, size: 20),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight:
+                                  isUnread ? FontWeight.w700 : FontWeight.w600,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                      ),
+                    ),
+                    Text(
+                      time,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(fontSize: 11),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  message,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        height: 1.4,
+                      ),
+                ),
+              ],
+            ),
+          ),
+          if (isUnread) ...[
+            const SizedBox(width: 12),
+            Container(
+              width: 8,
+              height: 8,
+              margin: const EdgeInsets.only(top: 6),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -680,18 +729,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () => context.pop(),
-                    icon: Icon(Icons.chevron_left_rounded, size: 24),
-                    style: IconButton.styleFrom(
-                      backgroundColor: Theme.of(context).dividerColor,
-                      foregroundColor: Theme.of(context).colorScheme.onSurface,
-                      minimumSize: const Size(40, 40),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
+                  const BakeryBackButton(),
                   const SizedBox(width: 12),
                   Text('Settings',
                       style: Theme.of(context).textTheme.headlineLarge),
@@ -758,15 +796,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       children: [
         ListTile(
           contentPadding: const EdgeInsets.symmetric(vertical: 2),
-          leading: Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              color: Theme.of(context).dividerColor,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            alignment: Alignment.center,
-            child: Text(icon, style: const TextStyle(fontSize: 18)),
+          leading: ServiceIcon(
+            icon: icon,
           ),
           title: Text(label, style: Theme.of(context).textTheme.bodyLarge),
           trailing: valueText != null
@@ -801,18 +832,7 @@ class AddNewAddressScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () => context.pop(),
-                    icon: Icon(Icons.chevron_left_rounded, size: 24),
-                    style: IconButton.styleFrom(
-                      backgroundColor: Theme.of(context).dividerColor,
-                      foregroundColor: Theme.of(context).colorScheme.onSurface,
-                      minimumSize: const Size(40, 40),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
+                  const BakeryBackButton(),
                   const SizedBox(width: 12),
                   Text('New Address',
                       style: Theme.of(context).textTheme.headlineLarge),

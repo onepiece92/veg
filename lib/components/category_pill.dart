@@ -20,60 +20,50 @@ class CategoryPill extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedScale(
-        scale: active ? 1.05 : 1.0,
-        duration: const Duration(milliseconds: 200),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
-          decoration: BoxDecoration(
-            color: active ? colorScheme.primary : theme.cardColor,
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(
-              color: active ? colorScheme.primary : theme.dividerColor,
-              width: 1.5,
-            ),
-            boxShadow: [
-              if (active)
-                BoxShadow(
-                  color: colorScheme.primary.withValues(alpha: 0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                )
-              else
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+    return AnimatedScale(
+      scale: active ? 1.05 : 1.0,
+      duration: const Duration(milliseconds: 200),
+      child: ChoiceChip(
+        label: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (label == 'All') ...[
               Text(
                 icon,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: theme.textTheme.labelLarge?.copyWith(
                   height: 1.2,
+                  color: active ? colorScheme.onPrimary : colorScheme.onSurface,
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
-                label,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: active ? colorScheme.onPrimary : colorScheme.onSurface,
-                  fontWeight: active ? FontWeight.w700 : FontWeight.w500,
-                  fontSize: 14,
-                  letterSpacing: 0.1,
-                ),
-              ),
             ],
-          ),
+            Text(
+              label,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: active ? colorScheme.onPrimary : colorScheme.onSurface,
+                fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                fontSize: 14,
+                letterSpacing: 0.1,
+              ),
+            ),
+          ],
         ),
+        selected: active,
+        onSelected: (_) => onTap(),
+        showCheckmark: false,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        backgroundColor: theme.cardColor,
+        selectedColor: colorScheme.primary,
+        side: BorderSide(
+          color: active ? colorScheme.primary : theme.dividerColor,
+          width: 1.5,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        elevation: active ? 4 : 1,
+        shadowColor: active ? colorScheme.primary : theme.shadowColor,
       ),
     );
   }

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../data/bakery_data.dart';
 import '../../providers/favourites_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../components/grid_product_card.dart';
+import '../../components/primary_button.dart';
+import '../../components/bakery_back_button.dart';
 import 'package:go_router/go_router.dart';
 
 class FavouritesScreen extends StatelessWidget {
@@ -17,52 +20,61 @@ class FavouritesScreen extends StatelessWidget {
     final favs =
         BakeryData.products.where((p) => favProv.isFavourite(p.id)).toList();
 
-    return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('My Favourites',
-                    style: Theme.of(context).textTheme.displayMedium),
-                const SizedBox(height: 4),
-                Text('${favs.length} saved item${favs.length != 1 ? 's' : ''}',
-                    style: Theme.of(context).textTheme.bodySmall),
-              ],
-            ),
+    return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(
+          leading: const Padding(
+            padding: EdgeInsets.only(left: 8.0),
+            child: BakeryBackButton(),
           ),
-          Expanded(
-            child: favs.isEmpty
-                ? _EmptyFavourites()
-                : GridView.builder(
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 80),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 0.95,
-                    ),
-                    itemCount: favs.length,
-                    itemBuilder: (_, i) {
-                      final p = favs[i];
-                      return GridProductCard(
-                        product: p,
-                        onTap: () =>
-                            context.push('/favourites/product', extra: p),
-                        onQuickAdd: () => cart.addProduct(p),
-                        isFavourite: favProv.isFavourite(p.id),
-                        onToggleFavourite: () => favProv.toggle(p.id),
-                      );
-                    },
-                  ),
+        ),
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('My Favourites',
+                        style: Theme.of(context).textTheme.displayMedium),
+                    const SizedBox(height: 4),
+                    Text(
+                        '${favs.length} saved item${favs.length != 1 ? 's' : ''}',
+                        style: Theme.of(context).textTheme.bodySmall),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: favs.isEmpty
+                    ? _EmptyFavourites()
+                    : GridView.builder(
+                        padding: const EdgeInsets.fromLTRB(24, 0, 24, 80),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 0.95,
+                        ),
+                        itemCount: favs.length,
+                        itemBuilder: (_, i) {
+                          final p = favs[i];
+                          return GridProductCard(
+                            product: p,
+                            onTap: () =>
+                                context.push('/favourites/product', extra: p),
+                            onQuickAdd: () => cart.addProduct(p),
+                            isFavourite: favProv.isFavourite(p.id),
+                            onToggleFavourite: () => favProv.toggle(p.id),
+                          );
+                        },
+                      ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
@@ -75,7 +87,10 @@ class _EmptyFavourites extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('❤️', style: TextStyle(fontSize: 56)),
+            Flexible(
+              child: Lottie.asset('assets/animations/empty_fav.json',
+                  width: 250, repeat: false, fit: BoxFit.contain),
+            ),
             const SizedBox(height: 16),
             Text('No favourites yet',
                 style: Theme.of(context).textTheme.headlineMedium),
@@ -83,6 +98,11 @@ class _EmptyFavourites extends StatelessWidget {
             Text("Tap the ♡ on any item to save it here",
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.center),
+            const SizedBox(height: 32),
+            PrimaryButton(
+              label: 'Browse Menu',
+              onTap: () => context.go('/home'),
+            ),
           ],
         ),
       ),

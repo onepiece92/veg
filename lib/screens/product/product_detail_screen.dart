@@ -4,6 +4,7 @@ import '../../theme/app_theme.dart';
 import '../../models/product.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/favourites_provider.dart';
+import '../../components/bakery_back_button.dart';
 
 import 'package:go_router/go_router.dart';
 
@@ -87,20 +88,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 expandedHeight: 280,
                 pinned: true,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                leading: GestureDetector(
-                  onTap: () => context.pop(),
-                  child: Container(
-                    margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .scaffoldBackgroundColor
-                          .withValues(alpha: 0.85),
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    alignment: Alignment.center,
-                    child: Icon(Icons.chevron_left_rounded,
-                        color: Theme.of(context).colorScheme.primary, size: 24),
-                  ),
+                leading: const Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: BakeryBackButton(),
                 ),
                 actions: [
                   GestureDetector(
@@ -108,20 +98,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     child: Container(
                       margin: const EdgeInsets.all(8),
                       width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .scaffoldBackgroundColor
-                            .withValues(alpha: 0.85),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
                       alignment: Alignment.center,
                       child: Icon(
-                        isFav
-                            ? Icons.favorite_rounded
-                            : Icons.favorite_border_rounded,
-                        color: Theme.of(context).colorScheme.tertiary,
-                        size: 20,
+                        isFav ? Icons.favorite : Icons.favorite_border,
+                        color: isFav
+                            ? Colors.redAccent
+                            : Theme.of(context).colorScheme.primary,
+                        size: 22,
                       ),
                     ),
                   ),

@@ -5,6 +5,7 @@ import 'theme/app_theme.dart';
 import 'providers/cart_provider.dart';
 import 'providers/favourites_provider.dart';
 import 'providers/address_provider.dart';
+import 'providers/nav_provider.dart';
 import 'navigation/app_router.dart';
 
 void main() {
@@ -30,6 +31,7 @@ class BakeryApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => FavouritesProvider()),
         ChangeNotifierProvider(create: (_) => AddressProvider()),
+        ChangeNotifierProvider(create: (_) => NavProvider()),
       ],
       child: MaterialApp.router(
         title: 'La Petite Boulangerie',

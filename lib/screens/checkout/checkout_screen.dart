@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../models/address.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/address_provider.dart';
+import 'package:intl/intl.dart';
 import '../../components/primary_button.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,12 +15,13 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
-  int _step = 1; // 1 = delivery, 2 = payment, 3 = confirm
-  int _selectedPayment = 0;
+  int _step = 1; // 1 = delivery, 2 = payment & confirm
+  int _selectedPayment = 2; // Default to Cash
 
   static const _paymentMethods = [
     (icon: '💳', label: '•••• 4289', sub: 'Visa ending in 4289'),
     (icon: '🍎', label: 'Apple Pay', sub: 'Express checkout'),
+    (icon: '💵', label: 'Cash', sub: 'Pay on delivery or pickup'),
   ];
 
   String _stepLabel(Address addr) =>
@@ -37,7 +39,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: IconButton(
-            icon: const Icon(Icons.chevron_left_rounded, size: 24),
+            icon: const Icon(Icons.chevron_left_rounded, size: 28),
             onPressed: () => context.pop(),
           ),
         ),
@@ -56,9 +58,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       _StepIndicator(
                           label: step1Label, step: 1, current: _step),
                       const SizedBox(width: 6),
-                      _StepIndicator(label: 'Payment', step: 2, current: _step),
-                      const SizedBox(width: 6),
-                      _StepIndicator(label: 'Confirm', step: 3, current: _step),
+                      _StepIndicator(
+                          label: 'Payment & Confirm', step: 2, current: _step),
                     ],
                   ),
                 ),
@@ -71,19 +72,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       duration: const Duration(milliseconds: 300),
                       child: _step == 1
                           ? _Step1(addr: addr, key: const ValueKey(1))
-                          : _step == 2
-                              ? _Step2(
-                                  methods: _paymentMethods,
-                                  selected: _selectedPayment,
-                                  onSelect: (i) =>
-                                      setState(() => _selectedPayment = i),
-                                  key: const ValueKey(2),
-                                )
-                              : _Step3(
-                                  cart: cart,
-                                  addr: addr,
-                                  key: const ValueKey(3),
-                                ),
+                          : _Step2(
+                              cart: cart,
+                              addr: addr,
+                              methods: _paymentMethods,
+                              selected: _selectedPayment,
+                              onSelect: (i) =>
+                                  setState(() => _selectedPayment = i),
+                              key: const ValueKey(2),
+                            ),
                     ),
                   ),
                 ),
@@ -96,11 +93,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               left: 0,
               right: 0,
               child: PrimaryButton(
-                label: _step < 3
+                label: _step < 2
                     ? 'Continue'
                     : 'Place Order — \$${cart.total.toStringAsFixed(2)}',
                 onTap: () {
-                  if (_step < 3) {
+                  if (_step < 2) {
                     setState(() => _step++);
                   } else {
                     context.go('/cart/checkout/success');
@@ -179,7 +176,8 @@ class _Step1 extends StatelessWidget {
         _InfoTile(
           label: '${addr.type == 'Pickup' ? 'PICKUP' : 'DELIVERY'} TIME',
           icon: '🕐',
-          title: 'Today, 11:00 AM – 11:30 AM',
+          title:
+              'Today, ${DateFormat('h:mm a').format(DateTime.now().add(const Duration(minutes: 25)))}',
           subtitle: null,
         ),
         const SizedBox(height: 12),
@@ -196,12 +194,18 @@ class _Step1 extends StatelessWidget {
                         ?.copyWith(fontSize: 11, letterSpacing: 0.5)),
                 const SizedBox(height: 8),
                 TextField(
-                  maxLines: 2,
-                  decoration: const InputDecoration(
+                  maxLines: 4,
+                  decoration: InputDecoration(
                     hintText: 'Any special requests for your order...',
+                    hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurfaceVariant
+                              .withValues(alpha: 0.5),
+                        ),
                     border: InputBorder.none,
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
+                    isDense: false,
+                    contentPadding: const EdgeInsets.only(top: 8),
                   ),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
@@ -276,12 +280,16 @@ class _InfoTile extends StatelessWidget {
 }
 
 class _Step2 extends StatelessWidget {
+  final CartProvider cart;
+  final dynamic addr;
   final List<({String icon, String label, String sub})> methods;
   final int selected;
   final ValueChanged<int> onSelect;
 
   const _Step2(
-      {required this.methods,
+      {required this.cart,
+      required this.addr,
+      required this.methods,
       required this.selected,
       required this.onSelect,
       super.key});
@@ -291,6 +299,71 @@ class _Step2 extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text('Order Summary', style: Theme.of(context).textTheme.headlineSmall),
+        const SizedBox(height: 16),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                ...cart.items.map((item) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        children: [
+                          Text(item.product.image,
+                              style: const TextStyle(fontSize: 22)),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(item.product.name,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary)),
+                                Text('× ${item.quantity}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(fontSize: 12)),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            '\$${(item.product.price * item.quantity).toStringAsFixed(2)}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                          ),
+                        ],
+                      ),
+                    )),
+                Divider(color: Theme.of(context).dividerColor, height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total',
+                        style: Theme.of(context).textTheme.headlineSmall),
+                    Text('\$${cart.total.toStringAsFixed(2)}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall
+                            ?.copyWith(fontSize: 20)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
         Text('Payment Method',
             style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 16),
@@ -375,86 +448,6 @@ class _Step2 extends StatelessWidget {
             ),
           );
         }),
-      ],
-    );
-  }
-}
-
-class _Step3 extends StatelessWidget {
-  final CartProvider cart;
-  final dynamic addr;
-
-  const _Step3({required this.cart, required this.addr, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Order Summary', style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: 16),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                ...cart.items.map((item) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Row(
-                        children: [
-                          Text(item.product.image,
-                              style: const TextStyle(fontSize: 22)),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(item.product.name,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary)),
-                                Text('× ${item.quantity}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.copyWith(fontSize: 12)),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            '\$${(item.product.price * item.quantity).toStringAsFixed(2)}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
-                          ),
-                        ],
-                      ),
-                    )),
-                Divider(color: Theme.of(context).dividerColor, height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Total',
-                        style: Theme.of(context).textTheme.headlineSmall),
-                    Text('\$${cart.total.toStringAsFixed(2)}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall
-                            ?.copyWith(fontSize: 20)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
       ],
     );
   }

@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
 import '../../models/product.dart';
 import '../../data/bakery_data.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/favourites_provider.dart';
 import '../../providers/address_provider.dart';
+import '../../components/address_selector.dart';
 import '../../components/category_pill.dart';
 import '../../components/product_card.dart';
 import '../../components/grid_product_card.dart';
-import '../../components/address_selector.dart';
-import '../../components/order_card.dart';
+import '../../components/reorder_card.dart';
+import '../../components/ai_tip.dart';
+import '../../components/section_header.dart';
+import '../../providers/nav_provider.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,9 +29,8 @@ class _HomeScreenState extends State<HomeScreen>
   String _searchQuery = '';
   String _sortBy = 'default';
   bool _gridView = false;
-  bool _showFilter = false;
-  final Set<String> _activeFilters = {};
   final _searchCtrl = TextEditingController();
+  final _scrollController = ScrollController();
   late AnimationController _animCtrl;
   late Animation<double> _fadeAnim;
 
@@ -44,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen>
   void dispose() {
     _animCtrl.dispose();
     _searchCtrl.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -83,12 +87,6 @@ class _HomeScreenState extends State<HomeScreen>
       }).toList();
     }
 
-    if (_activeFilters.isNotEmpty) {
-      list = list
-          .where((p) => _activeFilters.every((f) => p.tags.contains(f)))
-          .toList();
-    }
-
     switch (_sortBy) {
       case 'price_low':
         list.sort((a, b) => a.price.compareTo(b.price));
@@ -111,9 +109,7 @@ class _HomeScreenState extends State<HomeScreen>
     final favProv = context.watch<FavouritesProvider>();
     final addrProv = context.watch<AddressProvider>();
     final filtered = _filtered;
-    final bool showRecent = _searchQuery.isEmpty &&
-        _selectedCategory == 'all' &&
-        _activeFilters.isEmpty;
+    final bool showRecent = _searchQuery.isEmpty && _selectedCategory == 'all';
 
     return FadeTransition(
       opacity: _fadeAnim,
@@ -134,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen>
                 const SizedBox(width: 12),
                 // Notification bell
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => context.push('/profile/notifications'),
                   style: IconButton.styleFrom(
                     backgroundColor: Theme.of(context).dividerColor,
                     foregroundColor:
@@ -148,123 +144,41 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           const SizedBox(height: 14),
 
-          // ── Search + Filter ──────────────────────────────────────
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            margin: EdgeInsets.only(bottom: _showFilter ? 12 : 20),
+          // ── Search ───────────────────────────────────────────────
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _SearchBar(
-                    controller: _searchCtrl,
-                    onChanged: (v) => setState(() => _searchQuery = v),
-                    onClear: () {
-                      _searchCtrl.clear();
-                      setState(() => _searchQuery = '');
-                    },
-                  ),
-                ),
-                const SizedBox(width: 10),
-                _FilterButton(
-                  active: _showFilter || _activeFilters.isNotEmpty,
-                  badge: _activeFilters.length,
-                  onTap: () => setState(() => _showFilter = !_showFilter),
-                ),
-              ],
+            child: _SearchBar(
+              controller: _searchCtrl,
+              onChanged: (v) => setState(() => _searchQuery = v),
+              onClear: () {
+                _searchCtrl.clear();
+                setState(() => _searchQuery = '');
+              },
             ),
           ),
-
-          // ── Dietary Filter Panel ─────────────────────────────────
-          AnimatedSize(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-            child: _showFilter
-                ? Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('DIETARY FILTERS',
-                            style: Theme.of(context).textTheme.labelSmall),
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: BakeryData.dietaryFilterOptions.map((f) {
-                            final active = _activeFilters.contains(f);
-                            final label = f.replaceAll(' Option', '');
-                            return FilterChip(
-                              label: Text(label),
-                              selected: active,
-                              onSelected: (selected) => setState(() {
-                                if (selected) {
-                                  _activeFilters.add(f);
-                                } else {
-                                  _activeFilters.remove(f);
-                                }
-                              }),
-                              selectedColor:
-                                  Theme.of(context).colorScheme.primary,
-                              checkmarkColor:
-                                  Theme.of(context).colorScheme.onPrimary,
-                              backgroundColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
-                              side: BorderSide(
-                                color: active
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).dividerColor,
-                                width: 1.5,
-                              ),
-                              labelStyle: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium
-                                  ?.copyWith(
-                                    color: active
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .onSurfaceVariant,
-                                    fontSize: 12,
-                                  ),
-                            );
-                          }).toList(),
-                        ),
-                        if (_activeFilters.isNotEmpty)
-                          TextButton(
-                            onPressed: () =>
-                                setState(() => _activeFilters.clear()),
-                            child: Text('Clear all filters',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium
-                                    ?.copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .tertiary,
-                                        fontSize: 12)),
-                          ),
-                      ],
-                    ),
-                  )
-                : const SizedBox.shrink(),
-          ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
 
           // ── Category Pills ───────────────────────────────────────
           SizedBox(
-            height: 64,
+            height: 60,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              clipBehavior: Clip.none,
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
               children: [
                 CategoryPill(
                   label: 'All',
                   icon: '✦',
                   active: _selectedCategory == 'all',
-                  onTap: () => setState(() => _selectedCategory = 'all'),
+                  onTap: () {
+                    setState(() => _selectedCategory = 'all');
+                    if (_scrollController.hasClients) {
+                      _scrollController.animateTo(0,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeOut);
+                    }
+                    context.read<NavProvider>().triggerCategoryChange();
+                  },
                 ),
                 const SizedBox(width: 10),
                 ...BakeryData.categories.map((c) {
@@ -274,7 +188,15 @@ class _HomeScreenState extends State<HomeScreen>
                       label: c.label,
                       icon: c.icon,
                       active: _selectedCategory == c.id,
-                      onTap: () => setState(() => _selectedCategory = c.id),
+                      onTap: () {
+                        setState(() => _selectedCategory = c.id);
+                        if (_scrollController.hasClients) {
+                          _scrollController.animateTo(0,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOut);
+                        }
+                        context.read<NavProvider>().triggerCategoryChange();
+                      },
                     ),
                   );
                 }),
@@ -286,8 +208,13 @@ class _HomeScreenState extends State<HomeScreen>
           // ── Scrollable content ───────────────────────────────────
           Expanded(
             child: ListView(
+              controller: _scrollController,
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
               children: [
+                // ── AI Tip ───────────────────────────────────────────────
+                const AiTip(),
+                const SizedBox(height: 16),
+
                 // Recent orders preview
                 if (showRecent) ...[
                   Row(
@@ -324,8 +251,12 @@ class _HomeScreenState extends State<HomeScreen>
                           child: OrderCard(
                             order: BakeryData.recentOrders[i],
                             featured: i == 0,
-                            onReorder: () =>
-                                context.push('/home/recent_orders'),
+                            onReorder: () {
+                              context
+                                  .read<CartProvider>()
+                                  .reorder(BakeryData.recentOrders[i]);
+                              context.push('/cart');
+                            },
                           ),
                         ),
                       ),
@@ -335,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ],
 
                 // Search result info
-                if (_searchQuery.isNotEmpty || _activeFilters.isNotEmpty)
+                if (_searchQuery.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Text(
@@ -345,25 +276,21 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
 
                 // Section title + Sort + View toggle
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Fresh Today',
-                        style: Theme.of(context).textTheme.headlineMedium),
-                    Row(
-                      children: [
-                        _SortButton(
-                          sortBy: _sortBy,
-                          onChanged: (v) => setState(() => _sortBy = v),
-                        ),
-                        const SizedBox(width: 6),
-                        _ViewToggle(
-                          isGrid: _gridView,
-                          onToggle: (v) => setState(() => _gridView = v),
-                        ),
-                      ],
-                    ),
-                  ],
+                SectionHeader(
+                  title: 'Fresh Today',
+                  trailing: Row(
+                    children: [
+                      _SortButton(
+                        sortBy: _sortBy,
+                        onChanged: (v) => setState(() => _sortBy = v),
+                      ),
+                      const SizedBox(width: 6),
+                      _ViewToggle(
+                        isGrid: _gridView,
+                        onToggle: (v) => setState(() => _gridView = v),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 14),
 
@@ -373,7 +300,6 @@ class _HomeScreenState extends State<HomeScreen>
                     onClear: () => setState(() {
                       _searchQuery = '';
                       _searchCtrl.clear();
-                      _activeFilters.clear();
                       _sortBy = 'default';
                       _selectedCategory = 'all';
                     }),
@@ -466,35 +392,6 @@ class _SearchBar extends StatelessWidget {
   }
 }
 
-class _FilterButton extends StatelessWidget {
-  final bool active;
-  final int badge;
-  final VoidCallback onTap;
-
-  const _FilterButton({
-    required this.active,
-    required this.badge,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Badge(
-      isLabelVisible: badge > 0,
-      label: Text('$badge',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onTertiary, fontSize: 9)),
-      backgroundColor: Theme.of(context).colorScheme.tertiary,
-      offset: const Offset(-4, 4),
-      child: IconButton(
-        isSelected: active,
-        onPressed: onTap,
-        icon: const Icon(Icons.tune_rounded, size: 20),
-      ),
-    );
-  }
-}
-
 class _SortButton extends StatelessWidget {
   final String sortBy;
   final ValueChanged<String> onChanged;
@@ -558,10 +455,11 @@ class _SortButton extends StatelessWidget {
       },
       statesController:
           WidgetStatesController({if (isActive) WidgetState.selected}),
-      child: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 4.0),
-        child: Icon(Icons.sort_rounded, size: 20),
+      style: TextButton.styleFrom(
+        minimumSize: const Size(0, 40),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
       ),
+      child: const Icon(Icons.sort_rounded, size: 20),
     );
   }
 }
@@ -597,7 +495,10 @@ class _EmptyState extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 48),
       child: Column(
         children: [
-          const Text('🔍', style: TextStyle(fontSize: 48)),
+          Flexible(
+            child: Lottie.asset('assets/animations/empty_search.json',
+                width: 200, repeat: false, fit: BoxFit.contain),
+          ),
           const SizedBox(height: 14),
           Text('No items found',
               style: Theme.of(context).textTheme.headlineSmall),
