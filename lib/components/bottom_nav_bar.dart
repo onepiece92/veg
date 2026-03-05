@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_decorations.dart';
 import '../theme/app_text_styles.dart';
 import '../providers/cart_provider.dart';
 
@@ -20,16 +21,14 @@ class AppBottomNavBar extends StatelessWidget {
     final cartCount = context.watch<CartProvider>().totalCount;
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.warmWhite,
-        border: const Border(
-          top: BorderSide(color: AppColors.beige),
-        ),
+        boxShadow: AppDecorations.sheetShadow,
       ),
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -107,7 +106,7 @@ class _NavItem extends StatelessWidget {
             label,
             style: AppTextStyles.navLabel.copyWith(
               color: color,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+              fontWeight: isActive ? FontWeight.w600 : null,
             ),
           ),
         ],
@@ -177,7 +176,7 @@ class _NavItemCart extends StatelessWidget {
             'Cart',
             style: AppTextStyles.navLabel.copyWith(
               color: color,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+              fontWeight: isActive ? FontWeight.w600 : null,
             ),
           ),
         ],

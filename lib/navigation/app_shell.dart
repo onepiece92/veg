@@ -30,7 +30,10 @@ class AppShell extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.warmWhite,
-      body: navigationShell,
+      body: SafeArea(
+        bottom: false,
+        child: navigationShell,
+      ),
       bottomNavigationBar: AppBottomNavBar(
         currentIndex: navigationShell.currentIndex,
         onTap: onNavTap,

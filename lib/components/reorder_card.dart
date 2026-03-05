@@ -60,31 +60,6 @@ class OrderCard extends StatelessWidget {
                           : Theme.of(context).textTheme.bodySmall?.color,
                     ),
               ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: featured
-                      ? Theme.of(context)
-                          .colorScheme
-                          .onPrimary
-                          .withValues(alpha: 0.15)
-                      : Theme.of(context).colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  order.status,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: featured
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : Theme.of(context)
-                                .colorScheme
-                                .onSecondaryContainer,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 10,
-                      ),
-                ),
-              ),
             ],
           ),
           const SizedBox(height: 10),

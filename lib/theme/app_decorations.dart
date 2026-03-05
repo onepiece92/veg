@@ -6,7 +6,9 @@ abstract final class AppDecorations {
   // ─── Border Radii ───────────────────────────────────────────
   static const double radiusXS = 8.0;
   static const double radiusS = 10.0;
+  static const double radiusSM = 12.0;
   static const double radiusM = 14.0;
+  static const double radiusML = 16.0;
   static const double radiusL = 18.0;
   static const double radiusXL = 20.0;
   static const double radiusXXL = 24.0;

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_decorations.dart';
+import '../theme/app_text_styles.dart';
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
 
@@ -27,8 +29,6 @@ class GridProductCard extends StatelessWidget {
         .where((i) => i.product.id == product.id)
         .fold(0, (sum, i) => sum + i.quantity));
 
-    final themeExt = Theme.of(context).extension<AppThemeExtension>()!;
-
     return GestureDetector(
       onTap: onTap,
       child: Card(
@@ -40,10 +40,9 @@ class GridProductCard extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: 120,
+                  height: 100,
                   width: double.infinity,
-                  decoration:
-                      BoxDecoration(gradient: themeExt.productImageGradient),
+                  decoration: AppDecorations.productImage,
                   alignment: Alignment.center,
                   child:
                       Text(product.image, style: const TextStyle(fontSize: 52)),
@@ -59,9 +58,9 @@ class GridProductCard extends StatelessWidget {
                       width: 28,
                       height: 28,
                       decoration: BoxDecoration(
-                        color:
-                            Colors.white.withAlpha(217), // 0.85 * 255 = 216.75
-                        borderRadius: BorderRadius.circular(9),
+                        color: AppColors.white.withValues(alpha: 0.85),
+                        borderRadius:
+                            BorderRadius.circular(AppDecorations.radiusXS),
                       ),
                       alignment: Alignment.center,
                       child: Icon(
@@ -69,8 +68,8 @@ class GridProductCard extends StatelessWidget {
                             ? Icons.favorite_rounded
                             : Icons.favorite_border_rounded,
                         color: isFavourite
-                            ? const Color(0xFFE07A5F) // AppColors.terracotta
-                            : const Color(0xFF816D62), // AppColors.softBrown
+                            ? AppColors.terracotta
+                            : AppColors.softBrown,
                         size: 15,
                       ),
                     ),
@@ -81,29 +80,26 @@ class GridProductCard extends StatelessWidget {
 
             // Info + counter
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     product.name,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 14),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.darkBrown,
+                        fontWeight: FontWeight.w500),
                     overflow: TextOverflow.ellipsis,
                   ),
+                  const SizedBox(height: 2),
+                  Text(product.time, style: AppTextStyles.labelSmall),
                   const SizedBox(height: 4),
-                  Text(product.time,
-                      style: Theme.of(context).textTheme.labelSmall),
-                  const SizedBox(height: 8),
                   Row(
                     children: [
-                      Flexible(
+                      Expanded(
                         child: Text(
                           '\$${product.price.toStringAsFixed(2)}',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontSize:
-                                  16), // Assuming price style maps to titleMedium
+                          style: AppTextStyles.price,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -149,8 +145,8 @@ class _GridAddCounter extends StatelessWidget {
       height: 28,
       width: hasItems ? 80 : 28,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
-        borderRadius: BorderRadius.circular(10),
+        color: AppColors.darkBrown,
+        borderRadius: BorderRadius.circular(AppDecorations.radiusS),
       ),
       clipBehavior: Clip.hardEdge,
       child: hasItems
@@ -163,8 +159,7 @@ class _GridAddCounter extends StatelessWidget {
                         .read<CartProvider>()
                         .updateById(productId, qty - 1),
                     child: Icon(Icons.remove_rounded,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        size: 12),
+                        color: AppColors.cream, size: 12),
                   ),
                 ),
                 // Animated count
@@ -175,11 +170,11 @@ class _GridAddCounter extends StatelessWidget {
                   child: Text(
                     '$qty',
                     key: ValueKey(qty),
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12,
-                        ),
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: AppColors.cream,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
                 // + increment
@@ -187,16 +182,15 @@ class _GridAddCounter extends StatelessWidget {
                   child: GestureDetector(
                     onTap: onAdd,
                     child: Icon(Icons.add_rounded,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        size: 12),
+                        color: AppColors.cream, size: 12),
                   ),
                 ),
               ],
             )
           : GestureDetector(
               onTap: onAdd,
-              child: Icon(Icons.add_rounded,
-                  color: Theme.of(context).colorScheme.onPrimary, size: 16),
+              child: const Icon(Icons.add_rounded,
+                  color: AppColors.cream, size: 16),
             ),
     );
   }

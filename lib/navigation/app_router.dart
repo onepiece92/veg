@@ -3,15 +3,15 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import '../models/product.dart';
 import 'app_shell.dart';
-import '../screens/home/home_screen.dart';
-import '../screens/product/product_detail_screen.dart';
-import '../screens/cart/cart_screen.dart';
-import '../screens/checkout/checkout_screen.dart';
-import '../screens/order_success/order_success_screen.dart';
-import '../screens/orders/recent_orders_screen.dart';
-import '../screens/favourites/favourites_screen.dart';
-import '../screens/profile/profile_screen.dart';
-import '../screens/profile/profile_sub_screens.dart';
+import '../screens/home_screen.dart';
+import '../screens/product_detail_screen.dart';
+import '../screens/cart_screen.dart';
+import '../screens/checkout_screen.dart';
+import '../screens/order_success_screen.dart';
+import '../screens/recent_orders_screen.dart';
+import '../screens/favourites_screen.dart';
+import '../screens/profile_screen.dart';
+import '../screens/profile_sub_screens.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'root');

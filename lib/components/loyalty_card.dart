@@ -148,8 +148,8 @@ class _LoyaltyCardState extends State<LoyaltyCard>
                       ),
                       Text(
                         'Then 🎂 Free Slice at 750 · 👑 VIP at 1000',
-                        style: AppTextStyles.caption
-                            .copyWith(color: Colors.white.withValues(alpha: 0.4)),
+                        style: AppTextStyles.caption.copyWith(
+                            color: Colors.white.withValues(alpha: 0.4)),
                       ),
                     ],
                   ),

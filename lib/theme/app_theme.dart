@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
+import 'app_decorations.dart';
 import 'app_text_styles.dart';
 
 /// Material theme wiring all brand tokens.
@@ -44,7 +45,7 @@ final class AppTheme {
             backgroundColor: AppColors.darkBrown,
             foregroundColor: AppColors.cream,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(AppDecorations.radiusL),
             ),
             padding: const EdgeInsets.symmetric(vertical: 18),
             textStyle: AppTextStyles.buttonPrimary,
@@ -55,7 +56,7 @@ final class AppTheme {
             foregroundColor: AppColors.darkBrown,
             side: const BorderSide(color: AppColors.darkBrown, width: 1.5),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppDecorations.radiusM),
             ),
             padding: const EdgeInsets.symmetric(vertical: 14),
           ),
@@ -67,7 +68,7 @@ final class AppTheme {
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppDecorations.radiusS),
             ),
           ).copyWith(
             backgroundColor: WidgetStateProperty.resolveWith((states) {
@@ -95,7 +96,8 @@ final class AppTheme {
               return AppColors.softBrown;
             }),
             shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppDecorations.radiusML)),
             ),
             minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
             padding: const WidgetStatePropertyAll(EdgeInsets.zero),
@@ -114,7 +116,8 @@ final class AppTheme {
               return AppColors.softBrown;
             }),
             shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppDecorations.radiusS)),
             ),
             side: const WidgetStatePropertyAll(BorderSide.none),
           ),
@@ -123,15 +126,15 @@ final class AppTheme {
           filled: true,
           fillColor: AppColors.white,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppDecorations.radiusM),
             borderSide: const BorderSide(color: AppColors.beige, width: 1.5),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppDecorations.radiusM),
             borderSide: const BorderSide(color: AppColors.beige, width: 1.5),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppDecorations.radiusM),
             borderSide: const BorderSide(color: AppColors.caramel, width: 1.5),
           ),
           contentPadding:
@@ -149,8 +152,9 @@ final class AppTheme {
           color: AppColors.white,
           elevation: 0,
           margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+          shape: const RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.all(Radius.circular(AppDecorations.radiusCard)),
             side: BorderSide(color: AppColors.beige),
           ),
         ),
@@ -159,14 +163,15 @@ final class AppTheme {
           labelStyle: AppTextStyles.labelSmall.copyWith(color: AppColors.white),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppDecorations.radiusSM),
             side: BorderSide.none,
           ),
         ),
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: AppColors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(AppDecorations.radiusCard)),
           ),
         ),
         extensions: const <ThemeExtension<dynamic>>[
