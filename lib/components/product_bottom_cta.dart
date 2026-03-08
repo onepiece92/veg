@@ -1,3 +1,4 @@
+import '../../theme/app_colors.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
@@ -78,7 +79,7 @@ class _ProductBottomCtaState extends State<ProductBottomCta>
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.12),
+                      color: AppColors.black.withValues(alpha: 0.12),
                       blurRadius: 24,
                       spreadRadius: 0,
                       offset: const Offset(0, 8),

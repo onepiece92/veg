@@ -190,7 +190,7 @@ class AddressBottomSheet extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 8),
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.beige : Colors.transparent,
+                  color: isSelected ? AppColors.beige : AppColors.transparent,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: isSelected ? AppColors.darkBrown : AppColors.beige,

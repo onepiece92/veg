@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../../theme/app_colors.dart';
 import '../../components/primary_button.dart';
 import '../../data/bakery_data.dart';
 import 'package:go_router/go_router.dart';
@@ -62,7 +62,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     .textTheme
                                     .displayLarge
                                     ?.copyWith(
-                                        color: Colors.white, fontSize: 32)),
+                                        color: AppColors.white, fontSize: 32)),
                           ),
                           const SizedBox(height: 8),
                           Text('Change photo',
@@ -580,7 +580,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   _buildNotificationCard(
                     context,
                     icon: Icons.stars_rounded,
-                    iconColor: Colors.amber.shade700,
+                    iconColor: AppColors.golden,
                     title: 'Points Earned!',
                     message:
                         'You earned 50 loyalty points from your last order. You now have 320 points.',

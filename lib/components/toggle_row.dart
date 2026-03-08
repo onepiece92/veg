@@ -81,7 +81,7 @@ class ToggleRow extends StatelessWidget {
                           borderRadius: BorderRadius.circular(11),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.15),
+                              color: AppColors.black.withValues(alpha: 0.15),
                               blurRadius: 4,
                               offset: const Offset(0, 1),
                             ),

@@ -1,3 +1,4 @@
+import '../../theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../models/order.dart';
 
@@ -96,8 +97,8 @@ class OrderCard extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
+                    backgroundColor: AppColors.transparent,
+                    shadowColor: AppColors.transparent,
                   ),
                   child: Text(
                     'Reorder',

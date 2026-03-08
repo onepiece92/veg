@@ -22,8 +22,8 @@ class EmptyCartView extends StatelessWidget {
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
                 // Fallback icon if Lottie fails or asset is missing
-                return const Icon(Icons.shopping_basket_outlined,
-                    size: 100, color: Colors.grey);
+                return Icon(Icons.shopping_basket_outlined,
+                    size: 100, color: Theme.of(context).colorScheme.outline);
               },
             ),
           ),

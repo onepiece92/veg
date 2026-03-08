@@ -16,14 +16,14 @@ class _AiTipState extends State<AiTip> with SingleTickerProviderStateMixin {
   late Animation<double> _fadeAnim;
 
   final List<String> _tips = [
-    "Sourdough bread acts as a prebiotic, which means that the fiber in the bread helps feed the 'good' bacteria in your intestines.",
-    "Multigrain bread provides complex carbohydrates ensuring a steady release of long-lasting energy throughout your day.",
-    "Whole wheat pastries contain more nutrients and fiber than their refined counterparts, keeping you full and satisfied.",
-    "Rye bread is incrednsibly dee with nutrients and has a lower glycemic index, preventing sudden blood sugar spikes.",
-    "Oatmeal cookies, when made with whole oats, offer a great source of soluble fiber and can be a heart-healthy treat.",
-    "Breads with seeds like flax or chia add a massive boost of Omega-3 fatty acids to your daily diet.",
-    "Fermented doughs like sourdough break down gluten during fermentation, making it easier to digest for some people.",
-    "Artisan whole grain breads are packed with B vitamins which are essential for energy metabolism and nerve health.",
+    "Leafy greens like spinach and kale are rich in iron, calcium and folate — order in bulk for consistent supply to your restaurant or retail clients.",
+    "Tomatoes are best stored at room temperature before sale. Refrigeration below 10°C can diminish flavour and soften texture.",
+    "Seasonal produce costs up to 40% less than out-of-season imports. Plan your menu around what's harvested now for better margins.",
+    "Organic certification adds value to your offering — consumers are willing to pay 20–30% more for certified organic fruits and vegetables.",
+    "Broccoli and cruciferous vegetables retain more nutrients when stored dry and cool. Avoid ethylene-producing fruits nearby in cold storage.",
+    "Fresh herbs like basil and coriander are high-margin add-ons. A small weekly order can significantly boost your average basket value.",
+    "Ripe mangoes and tropical fruit emit ethylene gas, which accelerates ripening of nearby produce. Store separately in your cold room.",
+    "Proper hydration of leafy greens during transport can extend shelf life by 2–3 days, reducing shrinkage and waste for your business.",
   ];
 
   NavProvider? _navProvider;
@@ -101,7 +101,7 @@ class _AiTipState extends State<AiTip> with SingleTickerProviderStateMixin {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Healthy Bakery Tip',
+                  Text('Wholesale Produce Tip',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.tertiary,
                             fontWeight: FontWeight.w600,

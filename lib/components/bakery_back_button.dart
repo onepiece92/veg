@@ -1,3 +1,4 @@
+import '../../theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,8 +13,8 @@ class BakeryBackButton extends StatelessWidget {
     return IconButton(
       onPressed: onPressed ?? () => context.pop(),
       style: IconButton.styleFrom(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
+        backgroundColor: AppColors.transparent,
+        shadowColor: AppColors.transparent,
       ),
       icon: Icon(Icons.chevron_left_rounded,
           size: 28, color: color ?? Theme.of(context).colorScheme.onSurface),

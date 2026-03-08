@@ -1,3 +1,4 @@
+import 'theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
+      statusBarColor: AppColors.transparent,
       statusBarIconBrightness: Brightness.dark,
       statusBarBrightness: Brightness.light,
     ),
@@ -34,7 +35,7 @@ class BakeryApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NavProvider()),
       ],
       child: MaterialApp.router(
-        title: 'La Petite Boulangerie',
+        title: 'Harvest Hub',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         routerConfig: router,

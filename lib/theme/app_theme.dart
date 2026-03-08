@@ -15,11 +15,17 @@ final class AppTheme {
           onPrimary: AppColors.cream,
           secondary: AppColors.caramel,
           onSecondary: AppColors.white,
+          tertiary: AppColors.caramel,
+          onTertiary: AppColors.white,
           surface: AppColors.warmWhite,
           onSurface: AppColors.text,
+          onSurfaceVariant: AppColors.textLight,
           error: AppColors.terracotta,
+          outline: AppColors.beige,
+          secondaryContainer: AppColors.softBrown,
+          onSecondaryContainer: AppColors.white,
         ),
-        scaffoldBackgroundColor: AppColors.warmWhite,
+        scaffoldBackgroundColor: AppColors.cream,
         textTheme: GoogleFonts.dmSansTextTheme().copyWith(
           displayLarge: AppTextStyles.displayLarge,
           displayMedium: AppTextStyles.displayMedium,
@@ -34,7 +40,7 @@ final class AppTheme {
           labelSmall: AppTextStyles.labelSmall,
         ),
         appBarTheme: AppBarTheme(
-          backgroundColor: AppColors.warmWhite,
+          backgroundColor: AppColors.cream,
           elevation: 0,
           centerTitle: false,
           iconTheme: const IconThemeData(color: AppColors.darkBrown),
@@ -152,14 +158,14 @@ final class AppTheme {
           color: AppColors.white,
           elevation: 0,
           margin: EdgeInsets.zero,
-          shape: const RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
             borderRadius:
                 BorderRadius.all(Radius.circular(AppDecorations.radiusCard)),
             side: BorderSide(color: AppColors.beige),
           ),
         ),
         chipTheme: ChipThemeData(
-          backgroundColor: AppColors.golden,
+          backgroundColor: AppColors.softBrown,
           labelStyle: AppTextStyles.labelSmall.copyWith(color: AppColors.white),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           shape: RoundedRectangleBorder(
@@ -169,7 +175,7 @@ final class AppTheme {
         ),
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: AppColors.white,
-          shape: const RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
                 top: Radius.circular(AppDecorations.radiusCard)),
           ),

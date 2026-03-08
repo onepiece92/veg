@@ -90,7 +90,7 @@ class _LoyaltyCardState extends State<LoyaltyCard>
             borderRadius: BorderRadius.circular(6),
             child: Container(
               height: 6,
-              color: Colors.white.withValues(alpha: 0.12),
+              color: AppColors.white.withValues(alpha: 0.12),
               alignment: Alignment.centerLeft,
               child: AnimatedBuilder(
                 animation: _progress,
@@ -115,7 +115,7 @@ class _LoyaltyCardState extends State<LoyaltyCard>
               Text(
                 '$remaining pts to next reward',
                 style: AppTextStyles.bodySmall.copyWith(
-                    color: Colors.white.withValues(alpha: 0.5), fontSize: 12),
+                    color: AppColors.white.withValues(alpha: 0.5), fontSize: 12),
               ),
               Text(
                 '${widget.nextRewardAt} pts',
@@ -127,7 +127,7 @@ class _LoyaltyCardState extends State<LoyaltyCard>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: AppColors.white.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -149,7 +149,7 @@ class _LoyaltyCardState extends State<LoyaltyCard>
                       Text(
                         'Then 🎂 Free Slice at 750 · 👑 VIP at 1000',
                         style: AppTextStyles.caption.copyWith(
-                            color: Colors.white.withValues(alpha: 0.4)),
+                            color: AppColors.white.withValues(alpha: 0.4)),
                       ),
                     ],
                   ),

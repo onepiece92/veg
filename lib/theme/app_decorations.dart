@@ -26,7 +26,7 @@ abstract final class AppDecorations {
 
   static const List<BoxShadow> cardShadowHovered = [
     BoxShadow(
-      color: Color(0x1F4A3728),
+      color: Color(0x1F1A4731),
       blurRadius: 30,
       offset: Offset(0, 8),
     ),
@@ -34,7 +34,7 @@ abstract final class AppDecorations {
 
   static const List<BoxShadow> ctaShadow = [
     BoxShadow(
-      color: Color(0x404A3728),
+      color: Color(0x401A4731),
       blurRadius: 30,
       offset: Offset(0, 8),
     ),

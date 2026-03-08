@@ -9,39 +9,39 @@ abstract final class AppTextStyles {
   static TextStyle get displayLarge => GoogleFonts.dmSerifDisplay(
         fontSize: 32,
         fontWeight: FontWeight.w400,
-        color: AppColors.darkBrown,
+        color: AppColors.text,
         letterSpacing: -0.5,
       );
 
   static TextStyle get displayMedium => GoogleFonts.dmSerifDisplay(
         fontSize: 26,
         fontWeight: FontWeight.w400,
-        color: AppColors.darkBrown,
+        color: AppColors.text,
         letterSpacing: -0.5,
       );
 
   static TextStyle get headlineLarge => GoogleFonts.dmSerifDisplay(
         fontSize: 22,
         fontWeight: FontWeight.w400,
-        color: AppColors.darkBrown,
+        color: AppColors.text,
       );
 
   static TextStyle get headlineMedium => GoogleFonts.dmSerifDisplay(
         fontSize: 20,
         fontWeight: FontWeight.w400,
-        color: AppColors.darkBrown,
+        color: AppColors.text,
       );
 
   static TextStyle get headlineSmall => GoogleFonts.dmSerifDisplay(
         fontSize: 17,
         fontWeight: FontWeight.w400,
-        color: AppColors.darkBrown,
+        color: AppColors.text,
       );
 
   static TextStyle get titleLarge => GoogleFonts.dmSerifDisplay(
         fontSize: 16,
         fontWeight: FontWeight.w400,
-        color: AppColors.darkBrown,
+        color: AppColors.text,
         letterSpacing: 0.5,
       );
 
@@ -89,13 +89,13 @@ abstract final class AppTextStyles {
   static TextStyle get price => GoogleFonts.dmSerifDisplay(
         fontSize: 18,
         fontWeight: FontWeight.w400,
-        color: AppColors.darkBrown,
+        color: AppColors.text,
       );
 
   static TextStyle get priceLarge => GoogleFonts.dmSerifDisplay(
         fontSize: 24,
         fontWeight: FontWeight.w400,
-        color: AppColors.darkBrown,
+        color: AppColors.text,
       );
 
   static TextStyle get buttonPrimary => GoogleFonts.dmSerifDisplay(

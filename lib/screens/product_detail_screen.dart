@@ -103,7 +103,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       child: Icon(
                         isFav ? Icons.favorite : Icons.favorite_border,
                         color: isFav
-                            ? Colors.redAccent
+                            ? Theme.of(context).colorScheme.error
                             : Theme.of(context).colorScheme.primary,
                         size: 22,
                       ),

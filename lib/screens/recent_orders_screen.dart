@@ -139,7 +139,7 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
                                           .textTheme
                                           .bodySmall
                                           ?.copyWith(
-                                            color: Colors.white
+                                            color: Theme.of(context).colorScheme.onPrimary
                                                 .withValues(alpha: 0.5),
                                             fontSize: 13,
                                           ),
@@ -167,7 +167,7 @@ class _RecentOrdersScreenState extends State<RecentOrdersScreen>
                                           .textTheme
                                           .bodySmall
                                           ?.copyWith(
-                                            color: Colors.white
+                                            color: Theme.of(context).colorScheme.onPrimary
                                                 .withValues(alpha: 0.5),
                                             fontSize: 13,
                                           ),

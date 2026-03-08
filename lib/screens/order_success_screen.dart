@@ -92,10 +92,10 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                     ],
                   ),
                   alignment: Alignment.center,
-                  child: const Text('✓',
+                  child: Text('✓',
                       style: TextStyle(
                           fontSize: 52,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onPrimary,
                           fontWeight: FontWeight.w300)),
                 ),
               ),

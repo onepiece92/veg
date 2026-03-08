@@ -21,7 +21,7 @@ class CartScreen extends StatelessWidget {
   void _showAddressSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (_) => AddressBottomSheet(
         selectedId: context.read<AddressProvider>().selectedId,
         onSelect: (id) => context.read<AddressProvider>().select(id),

@@ -1,3 +1,4 @@
+import '../../theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
@@ -58,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen>
   void _showAddressSheet() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (_) => AddressBottomSheet(
         selectedId: context.read<AddressProvider>().selectedId,
         onSelect: (id) => context.read<AddressProvider>().select(id),
@@ -277,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen>
 
                 // Section title + Sort + View toggle
                 SectionHeader(
-                  title: 'Fresh Today',
+                  title: 'Today\'s Harvest',
                   trailing: Row(
                     children: [
                       _SortButton(
@@ -376,7 +377,7 @@ class _SearchBar extends StatelessWidget {
           .bodyMedium
           ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
       decoration: InputDecoration(
-        hintText: 'Search breads, pastries...',
+        hintText: 'Search fruits, vegetables...',
         prefixIcon: Icon(Icons.search_rounded,
             color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20),
         suffixIcon: controller.text.isNotEmpty
