@@ -5,10 +5,6 @@ import '../../providers/cart_provider.dart';
 import '../../providers/address_provider.dart';
 import 'package:intl/intl.dart';
 import '../../components/primary_button.dart';
-import '../../components/product_card.dart';
-import '../../components/grid_product_card.dart';
-import '../../providers/favourites_provider.dart';
-import '../../data/bakery_data.dart';
 import '../../components/empty_cart_view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -295,116 +291,194 @@ class _Step2 extends StatelessWidget {
   final int selected;
   final ValueChanged<int> onSelect;
 
-  const _Step2(
-      {required this.cart,
-      required this.addr,
-      required this.methods,
-      required this.selected,
-      required this.onSelect,
-      super.key});
+  const _Step2({
+    required this.cart,
+    required this.addr,
+    required this.methods,
+    required this.selected,
+    required this.onSelect,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Order Summary', style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: 16),
-        // Product list section - without the extra wrapping Card to avoid double nesting
-        ...cart.items.map((item) {
-          final favProv = context.watch<FavouritesProvider>();
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: ProductCard(
-              product: item.product,
-              onTap: () => context.push('/home/product', extra: item.product),
-              onQuickAdd: () => cart.addProduct(item.product),
-              isFavourite: favProv.isFavourite(item.product.id),
-              onToggleFavourite: () => favProv.toggle(item.product.id),
-            ),
-          );
-        }),
-        const SizedBox(height: 24),
-        // Suggestions section
-        Text('Add something extra?',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.5,
-                )),
-        const SizedBox(height: 16),
-        SizedBox(
-          height: 220,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            scrollDirection: Axis.horizontal,
-            itemCount: BakeryData.products.length,
-            separatorBuilder: (context, index) => const SizedBox(width: 12),
-            itemBuilder: (context, index) {
-              final product = BakeryData.products[index];
-              // Only show suggestions that aren't already in the cart
-              if (cart.items.any((i) => i.product.id == product.id)) {
-                return const SizedBox.shrink();
-              }
-              final favProv = context.watch<FavouritesProvider>();
-              return SizedBox(
-                width: 160,
-                child: GridProductCard(
-                  product: product,
-                  onTap: () => context.push('/home/product', extra: product),
-                  onQuickAdd: () => cart.addProduct(product),
-                  isFavourite: favProv.isFavourite(product.id),
-                  onToggleFavourite: () => favProv.toggle(product.id),
-                ),
-              );
-            },
+        // --- Receipt Header ---
+        Center(
+          child: Text(
+            'Business Name: Harvest Hub',
+            style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Warehouse: Primary HUB', style: textTheme.bodyMedium),
+            Text('Paid Bill No.: 378', style: textTheme.bodyMedium),
+          ],
+        ),
+        const Divider(height: 32),
+
+        // --- Items Ordered Section ---
+        Text(
+          'Items Ordered',
+          style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              flex: 4,
+              child: Text('Name',
+                  style: textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  )),
+            ),
+            Expanded(
+                child: Text('Qty',
+                    textAlign: TextAlign.center,
+                    style: textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ))),
+            Expanded(
+                flex: 2,
+                child: Text('Rate (Rs)',
+                    textAlign: TextAlign.right,
+                    style: textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ))),
+            Expanded(
+                flex: 2,
+                child: Text('Amt (Rs)',
+                    textAlign: TextAlign.right,
+                    style: textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ))),
+          ],
+        ),
+        const SizedBox(height: 8),
+        ...cart.items.map((item) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 4,
+                      child:
+                          Text(item.product.name, style: textTheme.bodySmall)),
+                  Expanded(
+                      child: Text('x ${item.quantity}',
+                          textAlign: TextAlign.center,
+                          style: textTheme.bodySmall)),
+                  Expanded(
+                      flex: 2,
+                      child: Text(item.product.price.toStringAsFixed(2),
+                          textAlign: TextAlign.right,
+                          style: textTheme.bodySmall)),
+                  Expanded(
+                      flex: 2,
+                      child: Text(
+                          (item.product.price * item.quantity)
+                              .toStringAsFixed(2),
+                          textAlign: TextAlign.right,
+                          style: textTheme.bodySmall)),
+                ],
+              ),
+            )),
+        const Divider(height: 32),
+
+        // --- Totals ---
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Total', style: textTheme.bodyMedium),
+            Text('Rs ${cart.total.toStringAsFixed(2)}',
+                style: textTheme.bodyMedium),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Discount', style: textTheme.bodyMedium),
+            Text('Rs 0.00', style: textTheme.bodyMedium),
+          ],
+        ),
+        const Divider(height: 32),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Grand Total',
+                style: textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold)),
+            Text('Rs ${cart.total.toStringAsFixed(2)}',
+                style: textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const Divider(height: 32),
+
+        // --- Cashier Details ---
+        Text('Cashier',
+            style:
+                textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Suraj Giri', style: textTheme.bodyMedium),
+            Text('Payment Mode: cash', style: textTheme.bodyMedium),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Counter: POS12', style: textTheme.bodyMedium),
+            Text(
+                'Date: ${DateFormat('MM/dd/yyyy hh:mm:ss a').format(DateTime.now())}',
+                style: textTheme.bodySmall),
+          ],
+        ),
+        const Divider(height: 32),
+
+        // --- Buzz Points ---
+        Text('Buzz Points',
+            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Current',
+                style: textTheme.labelSmall
+                    ?.copyWith(color: colorScheme.onSurfaceVariant)),
+            Text('0', style: textTheme.labelSmall),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Total',
+                style: textTheme.labelSmall
+                    ?.copyWith(color: colorScheme.onSurfaceVariant)),
+            Text('0.00', style: textTheme.labelSmall),
+          ],
         ),
         const SizedBox(height: 32),
-        // Total summary card
-        Card(
-          elevation: 0,
-          color: Theme.of(context)
-              .colorScheme
-              .primaryContainer
-              .withValues(alpha: 0.3),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(
-              color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Total Amount',
-                        style: Theme.of(context).textTheme.bodySmall),
-                    Text('\$${cart.total.toStringAsFixed(2)}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium
-                            ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary)),
-                  ],
-                ),
-                Icon(Icons.receipt_long_rounded,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primary
-                        .withValues(alpha: 0.5)),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 24),
-        Text('Payment Method',
-            style: Theme.of(context).textTheme.headlineSmall),
+
+        // --- Original Payment Method Selection ---
+        Text('Change Payment Method',
+            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
         ...methods.asMap().entries.map((e) {
           final i = e.key;
@@ -413,74 +487,35 @@ class _Step2 extends StatelessWidget {
           return GestureDetector(
             onTap: () => onSelect(i),
             child: Card(
+              elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 side: BorderSide(
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).dividerColor,
-                    width: 1.5),
+                  color: isSelected ? colorScheme.primary : theme.dividerColor,
+                  width: isSelected ? 2 : 1,
+                ),
               ),
-              margin: const EdgeInsets.only(bottom: 10),
+              margin: const EdgeInsets.only(bottom: 8),
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(12),
                 child: Row(
                   children: [
-                    Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withValues(alpha: 0.1)
-                            : Theme.of(context).dividerColor,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(m.icon, style: const TextStyle(fontSize: 20)),
-                    ),
-                    const SizedBox(width: 14),
+                    Text(m.icon, style: const TextStyle(fontSize: 20)),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(m.label,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(fontWeight: FontWeight.w500)),
-                          Text(m.sub,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(fontSize: 12)),
+                              style: textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold)),
+                          Text(m.sub, style: textTheme.labelSmall),
                         ],
                       ),
                     ),
                     if (isSelected)
-                      Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            shape: BoxShape.circle),
-                        alignment: Alignment.center,
-                        child: Icon(Icons.check_rounded,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            size: 12),
-                      )
-                    else
-                      Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: Theme.of(context).dividerColor,
-                                width: 2)),
-                      ),
+                      Icon(Icons.check_circle,
+                          color: colorScheme.primary, size: 20),
                   ],
                 ),
               ),
