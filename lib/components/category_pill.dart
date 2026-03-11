@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Category filter pill chip.
+/// Category filter pill chip (Custom implementation to avoid ChoiceChip overflows).
 class CategoryPill extends StatelessWidget {
   final String label;
   final String icon;
@@ -20,50 +20,60 @@ class CategoryPill extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return AnimatedScale(
-      scale: active ? 1.05 : 1.0,
-      duration: const Duration(milliseconds: 200),
-      child: ChoiceChip(
-        label: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (label == 'All') ...[
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedScale(
+        scale: active ? 1.02 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: active ? colorScheme.primary : theme.cardColor,
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(
+              color: active ? colorScheme.primary : theme.dividerColor,
+              width: 1.5,
+            ),
+            boxShadow: active
+                ? [
+                    BoxShadow(
+                      color: colorScheme.primary.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    )
+                  ]
+                : null,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (label == 'All') ...[
+                Text(
+                  icon,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: active ? colorScheme.onPrimary : colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(width: 8),
+              ] else ...[
+                Text(
+                  icon,
+                  style: const TextStyle(fontSize: 14),
+                ),
+                const SizedBox(width: 6),
+              ],
               Text(
-                icon,
-                style: theme.textTheme.labelLarge?.copyWith(
-                  height: 1.2,
+                label,
+                style: theme.textTheme.labelMedium?.copyWith(
                   color: active ? colorScheme.onPrimary : colorScheme.onSurface,
+                  fontWeight: active ? FontWeight.bold : FontWeight.w500,
+                  fontSize: 14,
                 ),
               ),
-              const SizedBox(width: 8),
             ],
-            Text(
-              label,
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: active ? colorScheme.onPrimary : colorScheme.onSurface,
-                fontWeight: active ? FontWeight.w700 : FontWeight.w500,
-                fontSize: 14,
-                letterSpacing: 0.1,
-              ),
-            ),
-          ],
+          ),
         ),
-        selected: active,
-        onSelected: (_) => onTap(),
-        showCheckmark: false,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        backgroundColor: theme.cardColor,
-        selectedColor: colorScheme.primary,
-        side: BorderSide(
-          color: active ? colorScheme.primary : theme.dividerColor,
-          width: 1.5,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        elevation: active ? 4 : 1,
-        shadowColor: active ? colorScheme.primary : theme.shadowColor,
       ),
     );
   }
