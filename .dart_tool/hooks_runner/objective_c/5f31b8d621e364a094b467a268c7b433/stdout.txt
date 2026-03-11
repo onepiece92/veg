@@ -1,0 +1,55 @@
+Running `(cd /Users/aashishbijukchhe/.pub-cache/hosted/pub.dev/objective_c-9.3.0/; TMPDIR=/var/folders/zs/n1wxqcj91sl6y62g_0yfpgmc0000gn/T/ PATH=/Users/aashishbijukchhe/.antigravity/antigravity/bin:/Users/aashishbijukchhe/Documents/apps/flutter/bin:/Users/aashishbijukchhe/Documents/apps/flutter/bin/:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/opt/pmk/env/global/bin:/Library/Apple/usr/bin:/usr/local/go/bin:/Users/aashishbijukchhe/Documents/apps/flutter/bin/:/Users/aashishbijukchhe/.antigravity/antigravity/bin:/Users/aashishbijukchhe/Documents/apps/flutter/bin:/Users/aashishbijukchhe/.antigravity/extensions/vscjava.vscode-java-debug-0.58.5-universal/bundled/scripts/noConfigScripts HOME=/Users/aashishbijukchhe /Users/aashishbijukchhe/Documents/apps/flutter/bin/cache/dart-sdk/bin/dart --packages=/Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/package_config.json /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/objective_c/5f31b8d621e364a094b467a268c7b433/hook.dill --config=/Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/objective_c/5f31b8d621e364a094b467a268c7b433/input.json )`.
+INFO: 2026-03-08 20:56:57.881475: Running `/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang --version`.
+
+INFO: 2026-03-08 20:56:57.956946: Running `/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang --version`.
+
+INFO: 2026-03-08 20:56:57.966958: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target x86_64-apple-darwin -mmacos-version-min=13 -c /Users/aashishbijukchhe/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/include/dart_api_dl.c -fpic -I src -o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/include/dart_api_dl.c.o
+
+INFO: 2026-03-08 20:56:57.967207: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target x86_64-apple-darwin -mmacos-version-min=13 -c /Users/aashishbijukchhe/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/objective_c.c -fpic -I src -o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/objective_c.c.o
+
+INFO: 2026-03-08 20:56:57.967354: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target x86_64-apple-darwin -mmacos-version-min=13 -c /Users/aashishbijukchhe/.pub-cache/hosted/pub.dev/objective_c-9.3.0/test/util.c -fpic -I src -o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/test/util.c.o
+
+INFO: 2026-03-08 20:56:57.967440: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target x86_64-apple-darwin -mmacos-version-min=13 -x objective-c -fobjc-arc -c /Users/aashishbijukchhe/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/input_stream_adapter.m -fpic -I src -o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/input_stream_adapter.m.o
+
+INFO: 2026-03-08 20:56:57.967520: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target x86_64-apple-darwin -mmacos-version-min=13 -x objective-c -fobjc-arc -c /Users/aashishbijukchhe/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/objective_c.m -fpic -I src -o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/objective_c.m.o
+
+INFO: 2026-03-08 20:56:57.967711: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target x86_64-apple-darwin -mmacos-version-min=13 -x objective-c -fobjc-arc -c /Users/aashishbijukchhe/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/ns_number.m -fpic -I src -o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/ns_number.m.oINFO: 2026-03-08 20:56:57.967782: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target x86_64-apple-darwin -mmacos-version-min=13 -x objective-c -fobjc-arc -c /Users/aashishbijukchhe/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/protocol.m -fpic -I src -o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/protocol.m.o
+
+INFO: 2026-03-08 20:56:57.967858: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target x86_64-apple-darwin -mmacos-version-min=13 -x objective-c -fobjc-arc -c /Users/aashishbijukchhe/.pub-cache/hosted/pub.dev/objective_c-9.3.0/src/objective_c_bindings_generated.m -fpic -I src -o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/objective_c_bindings_generated.m.o
+
+INFO: 2026-03-08 20:56:58.029642: 
+INFO: 2026-03-08 20:56:58.029706: 
+INFO: 2026-03-08 20:56:58.029728: Generated /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/objective_c.c.o
+
+INFO: 2026-03-08 20:56:58.031658: 
+INFO: 2026-03-08 20:56:58.031688: 
+INFO: 2026-03-08 20:56:58.031697: Generated /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/include/dart_api_dl.c.o
+
+INFO: 2026-03-08 20:56:58.038696: 
+INFO: 2026-03-08 20:56:58.038761: 
+INFO: 2026-03-08 20:56:58.038779: Generated /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/test/util.c.o
+
+INFO: 2026-03-08 20:56:58.040038: 
+INFO: 2026-03-08 20:56:58.040091: 
+INFO: 2026-03-08 20:56:58.040108: Generated /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/protocol.m.o
+
+INFO: 2026-03-08 20:56:58.040403: Generated /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/observer.m.o
+
+INFO: 2026-03-08 20:56:58.210621: 
+INFO: 2026-03-08 20:56:58.210661: 
+INFO: 2026-03-08 20:56:58.210671: Generated /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/ns_number.m.o
+
+INFO: 2026-03-08 20:56:58.216141: 
+INFO: 2026-03-08 20:56:58.216152: 
+INFO: 2026-03-08 20:56:58.216160: Generated /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/input_stream_adapter.m.o
+
+INFO: 2026-03-08 20:56:58.224356: 
+INFO: 2026-03-08 20:56:58.224418: 
+INFO: 2026-03-08 20:56:58.224430: Generated /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/objective_c_bindings_generated.m.o
+
+INFO: 2026-03-08 20:56:58.224831: Running: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -shared -Wl,-encryptable -undefined dynamic_lookup -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -target x86_64-apple-darwin -mmacos-version-min=13 /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/include/dart_api_dl.c.o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/objective_c.c.o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/test/util.c.o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/input_stream_adapter.m.o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/objective_c.m.o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/observer.m.o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/ns_number.m.o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/protocol.m.o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/obj/src/objective_c_bindings_generated.m.o -o /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/objective_c.dylib
+
+INFO: 2026-03-08 20:56:58.308721: 
+INFO: 2026-03-08 20:56:58.308763: 
+INFO: 2026-03-08 20:56:58.308777: Generated /Users/aashishbijukchhe/Documents/anti/veg/.dart_tool/hooks_runner/shared/objective_c/build/5f31b8d621/objective_c.dylib
+
